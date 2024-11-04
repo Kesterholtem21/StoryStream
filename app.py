@@ -37,32 +37,44 @@ class Movie(db.Model):
 
 
 class User(db.Model):
-    __tablename__ = 'Movies'
+    __tablename__ = 'Users'
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String, nullable=False)
     password = db.Column(db.Unicode, nullable=False)
     age = db.Column(db.Integer, nullable=False)
 
 
-@app.route("/register/")
+@app.get("/servey/")
+def get_servey():
+    # TODO create register GET route
+    pass
+
+
+@app.post("/servey/")
+def post_servey():
+    # TODO create register POST route
+    pass
+
+@app.get("/register/")
 def get_register():
     # TODO create register GET route
     pass
 
 
-@app.route("/register/")
+@app.post("/register/")
 def post_register():
     # TODO create register POST route
     pass
 
 
-@app.route("/login/")
+@app.get("/login/")
 def get_login():
     # TODO create login GET route
-    pass
+    form = LoginForm()
+    return render_template("login.html", form=form)
 
 
-@app.route("/login/")
+@app.post("/login/")
 def post_login():
     # TODO create login POST route
     # login_form: LoginForm = LoginForm()
@@ -84,4 +96,4 @@ def post_login():
 @app.route("/")
 def index():
     # TODO create default route
-    pass
+    return redirect(url_for("get_login"))
