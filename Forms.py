@@ -3,21 +3,24 @@ from wtforms.fields import StringField, IntegerField, SubmitField, SelectField, 
 from wtforms.validators import InputRequired, Optional, Length, Email
 
 
-class RegisterForm(FlaskForm):
-    #TODO fill this out
+class RegisterForm():
+    # TODO fill this out
     email = EmailField("Email: ", validators=[Email()])
     username = StringField("Username", validators=[InputRequired()])
-    password = StringField("Password", validators=[InputRequired(), Length(min=8, max=12)])
-    submit = SubmitField("Register")
+    password = StringField("Password", validators=[
+                           InputRequired(), Length(min=8, max=12)])
+    pass
 
-class LoginForm(FlaskForm):
-    #TODO fill this out
+
+class LoginForm():
+    # TODO fill this out
     email = EmailField("Email: ", validators=[Email()])
     username = StringField("Username", validators=[InputRequired()])
-    password = StringField("Password", validators=[InputRequired(), Length(min=8, max=12)])
+    password = StringField("Password", validators=[
+                           InputRequired(), Length(min=8, max=12)])
     submit = SubmitField("Login")
 
-class PreferenceForm(FlaskForm):
-    #TODO fill this out
-    genres = SelectField("What Genres do you prefer: ", choices=["Thriller", "Mystery", "Historical", "Science Fiction"])
-    submit = SubmitField("Submit")
+
+class PreferenceForm():
+    # TODO fill this out
+    pass

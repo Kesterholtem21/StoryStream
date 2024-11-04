@@ -3,49 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="static\styles\styles.css">
     <title>Login</title>
 </head>
 <body>
-
-    <div id="error-messages">
-        {% for msg in get_flashed_messages() %}
-        <div class="alert alert-warning alert-dismissible fade show w-50 mx-auto" role="alert">
-          {{msg}}
-          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-        {% endfor %}
-      </div>
-    
-      <form method="POST">
+    <form method="POST">
         {{ form.hidden_tag() }}
     
-        <div id="Email">
-        {{form.email.label}}
-        {{form.email()}}
-        </div>
+        {{ form.email.label }}
+        {{ form.email() }}
         <br>
-
-
-        <div id="Username">
         {{ form.username.label }}
         {{ form.username() }}
-        </div>
-        
         <br>
-        <div id="Password">
         {{ form.password.label }}
         {{ form.password() }}
-        </div>
-        
-        <div id="Submit">
+        <br>
         {{ form.submit() }}
-        </div>
-        
       </form>
-
-
-      <a href="/register">Sign Up</a>
-    
 </body>
 </html>
