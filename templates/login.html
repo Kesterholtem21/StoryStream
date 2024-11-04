@@ -6,6 +6,33 @@
     <title>Login</title>
 </head>
 <body>
+
+    <div id="error-messages">
+        {% for msg in get_flashed_messages() %}
+        <div class="alert alert-warning alert-dismissible fade show w-50 mx-auto" role="alert">
+          {{msg}}
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endfor %}
+      </div>
+    
+      <form method="POST">
+        {{ form.hidden_tag() }}
+    
+        {{form.email.label}}
+        {{form.email()}}
+        <br>
+        {{ form.username.label }}
+        {{ form.username() }}
+        <br>
+        {{ form.password.label }}
+        {{ form.password() }}
+        
+        {{ form.submit() }}
+      </form>
+
+
+      <a href="/register">Sign Up</a>
     
 </body>
 </html>
