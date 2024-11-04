@@ -4,19 +4,23 @@ from wtforms.validators import InputRequired, Optional, Length, Email
 
 
 class RegisterForm():
-    #TODO fill this out
+    # TODO fill this out
     email = EmailField("Email: ", validators=[Email()])
     username = StringField("Username", validators=[InputRequired()])
-    password = StringField("Password", validators=[InputRequired(), Length(min=8, max=12)])
+    password = StringField("Password", validators=[
+                           InputRequired(), Length(min=8, max=12)])
     pass
+
 
 class LoginForm():
-    #TODO fill this out
+    # TODO fill this out
     email = EmailField("Email: ", validators=[Email()])
     username = StringField("Username", validators=[InputRequired()])
-    password = StringField("Password", validators=[InputRequired(), Length(min=8, max=12)])
-    pass
+    password = StringField("Password", validators=[
+                           InputRequired(), Length(min=8, max=12)])
+    submit = SubmitField("Login")
+
 
 class PreferenceForm():
-    #TODO fill this out
+    # TODO fill this out
     pass
