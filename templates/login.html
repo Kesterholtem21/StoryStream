@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="static\styles\styles.css">
     <title>Login</title>
 </head>
 <body>
@@ -19,16 +20,28 @@
       <form method="POST">
         {{ form.hidden_tag() }}
     
+        <div id="Email">
         {{form.email.label}}
         {{form.email()}}
+        </div>
         <br>
+
+
+        <div id="Username">
         {{ form.username.label }}
         {{ form.username() }}
+        </div>
+        
         <br>
+        <div id="Password">
         {{ form.password.label }}
         {{ form.password() }}
+        </div>
         
+        <div id="Submit">
         {{ form.submit() }}
+        </div>
+        
       </form>
 
 
