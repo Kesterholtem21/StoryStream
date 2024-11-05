@@ -44,14 +44,14 @@ class User(db.Model):
     age = db.Column(db.Integer, nullable=False)
 
 
-@app.get("/servey/")
-def get_servey():
+@app.get("/survey/")
+def get_survey():
     # TODO create register GET route
     pass
 
 
-@app.post("/servey/")
-def post_servey():
+@app.post("/survey/")
+def post_survey():
     # TODO create register POST route
     pass
 
