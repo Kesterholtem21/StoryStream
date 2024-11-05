@@ -11,29 +11,30 @@
         {{ form.hidden_tag() }}
     
     <div class="form">
-        <div id="Email">
-            <div id="label">{{ form.email.label }}</div>
-            {{ form.email() }}
-        </div>
+
+        <div class="login-box">
+
+            <div class="login-header">Login</div>
         <br>
-
-
-        <div id="Username">
-            <div>{{ form.username.label }}</div>
-            {{ form.username() }}
-        </div>
+            <div id="Username">
+                <div>{{ form.username.label }}</div>
+                <div>{{ form.username() }}</div>
+            </div>
         <br>
-
-
-        <div id="Password">
-            <div>{{ form.password.label }}</div>
-            {{ form.password() }}
-        </div>
+            <div id="Password">
+                <div>{{ form.password.label }}</div>
+                <div>{{ form.password() }}</div>
+            </div>
         <br>
+            <div id="Submit">
+                <div>{{ form.submit() }}</div>
+            </div>
 
+            <div style="display: inline-block;">
+                <p style="display: inline-block;">Dont have an account? </p>
+                <a href="/register/"title="Click to create account" style="display: inline-block;">Sign up</a>
+            </div>
 
-        <div id="Submit">
-            {{ form.submit() }}
         </div>
 
     </div>

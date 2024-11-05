@@ -58,7 +58,8 @@ def post_servey():
 @app.get("/register/")
 def get_register():
     # TODO create register GET route
-    pass
+    form = RegisterForm()
+    return render_template("register.html", form=form)
 
 
 @app.post("/register/")
