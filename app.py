@@ -47,7 +47,8 @@ class User(db.Model):
 @app.get("/servey/")
 def get_servey():
     # TODO create register GET route
-    pass
+    form = PreferenceForm()
+    return render_template("survey.html", form=form)
 
 
 @app.post("/servey/")
