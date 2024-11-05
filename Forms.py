@@ -7,6 +7,7 @@ class RegisterForm(FlaskForm):
     # TODO fill this out
     username = StringField("Username", validators=[InputRequired()])
     password = StringField("Password", validators=[InputRequired(), Length(min=8, max=12)])
+    confirmPassword = StringField("Confirm Password", validators=[InputRequired(), Length(min=8, max=12)])
     age = IntegerField("Age: ", validators=[InputRequired()])
     submit = SubmitField("Register")
 
