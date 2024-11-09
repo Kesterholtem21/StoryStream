@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms.fields import StringField, IntegerField, SubmitField, SelectField, EmailField
+from wtforms.fields import StringField, IntegerField, SubmitField, SelectField, EmailField, SelectMultipleField
 from wtforms.validators import InputRequired, Optional, Length, Email
 
 
@@ -21,4 +21,5 @@ class LoginForm(FlaskForm):
 
 class PreferenceForm(FlaskForm):
     # TODO fill this out
+    genres = SelectMultipleField("Pick Your Favorite Genres: ", validators=[], choices=[""])
     pass
