@@ -1,64 +1,56 @@
-
 @import url('https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
 
-
-
-*{
+* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
     font-family: 'Rubik', sans-serif;
 }
 
-body{
+body {
     background-image: url("/static/blue.png");
     background-color: bisque;
     background-position: center;
     background-size: cover;
     background-repeat: no-repeat;
     background-attachment: fixed;
-
 }
 
-a{
+a {
     text-decoration: none;
     color: white;
 }
-a:hover{
+a:hover {
     color: rgb(190, 72, 219);
 }
 
-input{
+input {
     width: 100%;
 }
 
-input[type=text], input[type=number]{
+input[type=text], input[type=number] {
     padding: 12px 20px;
     margin: 8px 0;
     box-sizing: border-box;
+    border-radius: 5px;
+    border: 2px solid #ccc;
 }
 
-input[type=submit]{
+input[type=submit] {
     background-color: black;
-    border: black;
-    color: white;
-    padding: 16px 32px;
-    text-decoration: none;
-    margin: 4px 2px;
-    cursor: pointer;
-}
-
-input[type=submit]:hover{
-    background-color: rgb(90, 44, 198);
     border: none;
     color: white;
     padding: 16px 32px;
-    text-decoration: none;
     margin: 4px 2px;
     cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
-.form{
+input[type=submit]:hover {
+    background-color: rgb(90, 44, 198);
+}
+
+.form {
     width: 100%;
     display: flex;
     justify-content: center;
@@ -66,12 +58,10 @@ input[type=submit]:hover{
     min-height: 100vh;
 }
 
-.login-box{
-    
+.login-box {
     position: relative;
     width: 500px;
     backdrop-filter: blur(25px);
-    border: 2px black;
     border-radius: 15px;
     padding: 7.5em 2.5em 4em 2.5em;
     color: black;
@@ -79,7 +69,7 @@ input[type=submit]:hover{
     align-content: center;
 }
 
-.login-header{
+.login-header {
     position: absolute;
     top: 0;
     left: 50%;
@@ -101,12 +91,102 @@ input[type=submit]:hover{
     background-color: blue;
 }
 
-.Navigation{
+.Navigation {
     background-color: rgb(34, 68, 237);
     width: 250px;
     height: 100%;
     position: fixed;
     top: 0;
+    left: 0;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.logo {
+    margin-bottom: 50px;
+}
+
+.logoImg {
+    width: 200px;
+}
+
+.pageLinks {
+    list-style: none;
+    width: 100%;
+    padding: 0;
+}
+
+.pageLinks li {
+    padding: 20px 0;
+    text-align: left;
+}
+
+.pageLinks li a {
+    color: white;
+    text-decoration: none;
+    padding: 10px 15px;
+    display: flex;
+    align-items: center;
+    transition: background-color 0.3s ease;
+    border-radius: 8px;
+}
+
+.pageLinks li a:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.pageLinks li a i {
+    font-size: large;
+    margin-right: 10px;
+}
+
+.pageLinks li a p {
+    font-size: large;
+    margin: 0;
+}
+.search-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    margin-top: 20px;
+    width: 100%;
+    padding: 10px;
+    margin-left: 7%; /* Moves the search container to the right */
+}
+
+.search-bar {
+    padding: 12px 20px;
+    font-size: 16px;
+    border: 2px solid #ccc;
+    border-radius: 30px; 
+    width: 700px;  
+    transition: width 0.3s ease;
+}
+
+.search-bar:focus {
+    width: 750px; /* Width expansion on focus */
+    border-color: rgb(229, 229, 229);
+}
+
+.search-button {
+    background-color: black;
+    color: white;
+    padding: 12px 18px;
+    border: none;
+    border-radius: 30px; /* Matches the rounded style of the search bar */
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.search-button i {
+    font-size: 18px;
+}
+
+.search-button:hover {
+    background-color: rgb(224, 224, 224);
     left: 50;
     padding: 20px, 50px;
     align-items: center;
