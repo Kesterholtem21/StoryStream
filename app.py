@@ -102,7 +102,8 @@ class User(UserMixin, db.Model):
 # Route Handlers
 ###############################################################################
 
-
+with app.app_context():
+    db.create_all()
 
 @app.get("/viewed/")
 def get_viewed():
@@ -118,7 +119,7 @@ def post_viewed():
 @app.get("/home/")
 def get_home():
     # TODO create register GET route
-    return render_template("homePage.html")
+    return render_template("homePage.html", current_user=current_user)
 
 
 @app.post("/home/")
@@ -174,14 +175,18 @@ def post_register():
         # check if there is already a user with this email address
         user = User.query.filter_by(username=form.username.data).first()
         # if the email address is free and passwords match, create a new user and send to login
-        if user is None and form.password.data == form.confirmPassword.data:
-            user = User(email=form.username.data, password=form.password.data) # type:ignore
-            db.session.add(user)
-            db.session.commit()
-            return redirect(url_for('get_login'))
+        if user is None:
+            if form.password.data == form.confirmPassword.data:
+                user = User(username=form.username.data, password=form.password.data, age=form.age.data) # type:ignore
+                db.session.add(user)
+                db.session.commit()
+                return redirect(url_for('get_login'))
+            else:
+                flash('Make sure your passwords match')
+                return redirect(url_for('get_register'))
         else: # if the user already exists
             # flash a warning message and redirect to get registration form
-            flash('There is already an account with that email address')
+            flash('That username is already taken')
             return redirect(url_for('get_register'))
     else: # if the form was invalid
         # flash error messages and redirect to get registration form again
@@ -202,7 +207,7 @@ def post_login():
     form = LoginForm()
     if form.validate():
         # try to get the user associated with this email address
-        user = User.query.filter_by(email=form.username.data).first()
+        user = User.query.filter_by(username=form.username.data).first()
         # if this user exists and the password matches
         if user is not None and user.verify_password(form.password.data):
             # log this user in through the login_manager
@@ -210,7 +215,7 @@ def post_login():
             # redirect the user to the page they wanted or the home page
             next = request.args.get('next')
             if next is None or not next.startswith('/'):
-                next = url_for('index')
+                next = url_for('get_home')
             return redirect(next)
         else: # if the user does not exist or the password is incorrect
             # flash an error message and redirect to login form
@@ -226,5 +231,12 @@ def post_login():
 @app.route("/")
 def index():
     # TODO create default route
-    return redirect(url_for("get_home"))
+    return redirect(url_for("get_login"))
+
+@app.get('/logout/')
+@login_required
+def get_logout():
+    logout_user()
+    flash('You have been logged out')
+    return redirect(url_for('index'))
     

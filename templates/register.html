@@ -7,12 +7,33 @@
     <title>Register</title>
 </head>
 <body>
+    <header>
+        <div class="container">
+          {% for message in get_flashed_messages() %}
+            <div class="alert alert-warning d-flex align-items-center alert-dismissible fade show">
+                <div class="flashText">
+                    <button type="button" class="close" data-bs-dismiss="alert"> 
+                        &times;
+                    </button>
+              
+                    {{ message }}
+                </div>
+            </div>
+          {% endfor %}
+        </div>
+      </header>
+
+
     <form method="POST">
         {{ form.hidden_tag() }}
     
     <div class="form">
+        
+
+
 
         <div class="login-box">
+            
 
             <div class="login-header">Register</div>
 
@@ -41,6 +62,23 @@
             </div>
 
         </div>
+
+
+        <header>
+            <div class="container">
+              {% for message in get_flashed_messages() %}
+                <div class="alert alert-warning d-flex align-items-center alert-dismissible fade show">
+                    <div class="flashText">
+                        <button type="button" class="close" data-bs-dismiss="alert"> 
+                            &times;
+                        </button>
+                  
+                        {{ message }}
+                    </div>
+                </div>
+              {% endfor %}
+            </div>
+          </header>
 
     </div>
       </form>
