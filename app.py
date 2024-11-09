@@ -44,6 +44,50 @@ class User(db.Model):
     age = db.Column(db.Integer, nullable=False)
 
 
+@app.get("/viewed/")
+def get_viewed():
+    # TODO create register GET route
+    return render_template("viewedPage.html")
+
+
+@app.post("/viewed/")
+def post_viewed():
+    # TODO create register POST route
+    pass
+
+@app.get("/home/")
+def get_home():
+    # TODO create register GET route
+    return render_template("homePage.html")
+
+
+@app.post("/home/")
+def post_home():
+    # TODO create register POST route
+    pass
+
+@app.get("/favorites/")
+def get_favorites():
+    # TODO create register GET route
+    return render_template("favoritesPage.html")
+
+
+@app.post("/favorites/")
+def post_favorites():
+    # TODO create register POST route
+    pass
+
+@app.get("/profile/")
+def get_profile():
+    # TODO create register GET route
+    return render_template("profilePage.html")
+
+
+@app.post("/profile/")
+def post_profile():
+    # TODO create register POST route
+    pass
+
 @app.get("/survey/")
 def get_survey():
     # TODO create register GET route
@@ -98,4 +142,5 @@ def post_login():
 @app.route("/")
 def index():
     # TODO create default route
-    return redirect(url_for("get_login"))
+    #return redirect(url_for("get_login"))
+    return render_template("viewedPage.html")

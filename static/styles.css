@@ -94,3 +94,46 @@ input[type=submit]:hover{
     font-size: x-large;
     color: white;
 }
+
+.NavigationHeader{
+    width: 100%;
+    height: 100vh;
+    background-color: blue;
+}
+
+.Navigation{
+    background-color: rgb(34, 68, 237);
+    width: 250px;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 50;
+    padding: 20px, 50px;
+    align-items: center;
+}
+
+.logo{
+    display: block;
+    margin-bottom: 100px;
+    position: relative;
+    align-content: center;
+    size: 120%;
+}
+
+.logoImg{
+    width: 250px;
+}
+
+.pageLinks{
+    list-style: none;
+    position: relative;
+    justify-content: center;
+}
+
+.pageLinks li{
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 40px;
+}
+
+
