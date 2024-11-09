@@ -86,7 +86,11 @@ input[type=submit]:hover {
 }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 .NavigationHeader {
+=======
+.NavigationHeader{
+>>>>>>> c9580891abc327030a9be1b16b06104f395e1245
 =======
 .NavigationHeader{
 >>>>>>> c9580891abc327030a9be1b16b06104f395e1245
@@ -96,7 +100,11 @@ input[type=submit]:hover {
 }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 .Navigation {
+=======
+.Navigation{
+>>>>>>> c9580891abc327030a9be1b16b06104f395e1245
 =======
 .Navigation{
 >>>>>>> c9580891abc327030a9be1b16b06104f395e1245
@@ -105,6 +113,7 @@ input[type=submit]:hover {
     height: 100%;
     position: fixed;
     top: 0;
+<<<<<<< HEAD
 <<<<<<< HEAD
     left: 0;
     padding: 20px;
@@ -198,6 +207,8 @@ input[type=submit]:hover {
     background-color: rgb(224, 224, 224);
 }
 =======
+=======
+>>>>>>> c9580891abc327030a9be1b16b06104f395e1245
     left: 50;
     padding: 20px, 50px;
     align-items: center;
@@ -243,4 +254,7 @@ input[type=submit]:hover {
     font-size: large;
 }
 
+<<<<<<< HEAD
+>>>>>>> c9580891abc327030a9be1b16b06104f395e1245
+=======
 >>>>>>> c9580891abc327030a9be1b16b06104f395e1245
