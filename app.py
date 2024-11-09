@@ -136,11 +136,11 @@ def post_login():
     #     for field, error_msg in login_form.errors.items():
     #         flash(f"{field}: {error_msg}")
     # return redirect(url_for("get_login"))
-    pass
+    return redirect(url_for("get_home"))
 
 
 @app.route("/")
 def index():
     # TODO create default route
-    #return redirect(url_for("get_login"))
-    return render_template("viewedPage.html")
+    return redirect(url_for("get_login"))
+    
