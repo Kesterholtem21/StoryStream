@@ -3,9 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Content Survey</title>
+    <script src="https://kit.fontawesome.com/d8283239b9.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="/static/styles.css">
+    <title>Survey</title>
 </head>
 <body>
+    <div class="Navigation">
+        <div class="logo">
+            <a href="/home/"><img src="/static/SSH2.png" class="logoImg"></a>
+        </div>
+        <div>
+            <ul class="pageLinks">
+                <li><a  href="/home/"><i class="fa-solid fa-house-chimney"></i><p>Home</p></a></li>
+                <li><a href="/favorites/"><i class="fa-solid fa-heart"></i><p>Favorites</p></a></li>
+                <li class="active"><a href="/viewed/"><i class="fa-solid fa-square-check"></i><p>Viewed</p></a></li>
+                <li><a href="/profile/"><i class="fa-solid fa-user"></i><p>Profile</p></a></li>
+                <li><a href="/survey/"><i class="fa-solid fa-user"></i><p>Survey</p></a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="form-container">
+        <h1 class="text-center">Please fill out this form for recommendations</h1>
+        
+        <form method="post" class="recommendation-form">
+            {{ form.hidden_tag() }}
+    
+            <p class="instructions">Check up to 3 genres</p>
+            
+            <div class="form-group">
+                <label for="genres" class="form-label">{{ form.genres.label }}</label>
+                {{ form.genres(class="form-checkbox") }}
+            </div>
+    
+            <div class="form-group">
+                {{ form.submit(class="form-submit") }}
+            </div>
+        </form>
+    </div>
     
 </body>
 </html>
