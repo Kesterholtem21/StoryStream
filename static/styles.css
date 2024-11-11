@@ -339,23 +339,47 @@ input[type=submit]:hover {
     align-items: center;          /* Center vertically */
     min-height: 100vh;            /* Full viewport height */
 }
-/* Default styling for items */
+/* Default styling for items (card-like appearance) */
 view-container .item {
-    background-color: #e0e0e0;
+    background-color: #ffffff; /* White background for the cards */
     padding: 20px;
+    border-radius: 10px; /* Rounded corners */
     border: 1px solid #ccc;
     text-align: center;
     font-size: 1.2em;
     margin: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for card effect */
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transition for hover effects */
+}
+
+/* Hover effect to make the card "lift" */
+view-container .item:hover {
+    transform: translateY(-5px); /* Lifts the card slightly */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Stronger shadow on hover */
+}
+
+/* Title of the movie or book */
+view-container .item-title {
+    font-size: 1.5em;
+    font-weight: bold;
+    margin: 10px 0;
+    color: #333; /* Dark color for readability */
+}
+
+/* Short description of the movie or book */
+view-container .item-description {
+    font-size: 1em;
+    color: #666; /* Lighter color for the description */
+    margin: 10px 0;
 }
 
 /* Grid view styling */
 .grid-view {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Adjusted for better card fit */
     gap: 16px;
-    margin-left: 30%; /* Adjust this value to move it further right */
-    margin-top: 40px; /* 20px from the top of the container or viewport */
+    margin-left: 30%;
+    margin-top: 40px;
 }
 
 /* List view styling */
@@ -364,9 +388,10 @@ view-container .item {
     flex-direction: column;
     gap: 8px;
     width: 55%;
-    margin-left: 28%; /* Adjust this value to move it further right */
-    margin-top: 40px; /* 20px from the top of the container or viewport */
+    margin-left: 28%;
+    margin-top: 40px;
 }
+
 /* Move the button to the top right */
 #toggleView {
     padding: 10px 20px;
@@ -377,12 +402,68 @@ view-container .item {
     color: white;
     border-radius: 5px;
     transition: background-color 0.3s ease;
-    position: absolute; /* Position it absolutely */
-    top: 40px; /* 20px from the top of the container or viewport */
-    right: 30px; /* 20px from the right of the container or viewport */
+    position: absolute;
+    top: 40px;
+    right: 30px;
     margin-bottom: 20px;
 }
 
 #toggleView:hover {
     background-color: #000000;
+}
+.form-container {
+    width: 100%;
+    max-width: 600px;
+    margin: auto;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    margin-top: 15%;
+}
+
+.text-center {
+    font-size: 1.8em;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.instructions {
+    font-size: 1em;
+    color: #666;
+    margin-bottom: 15px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.form-label {
+    display: block;
+    font-weight: bold;
+    color: #444;
+    margin-bottom: 8px;
+}
+
+.form-checkbox {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.form-submit {
+    background-color: #191919;
+    color: white;
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.form-submit:hover {
+    background-color: #333;
 }
