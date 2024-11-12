@@ -33,11 +33,14 @@
     
     {% if search_results %}
         <h2 class="results-heading">Search Results</h2>
-        <ul class="search-results">
+        <view-container class="grid-view">
             {% for result in search_results %}
-                <li class="search-result">{{ result.title }}</li>
+                <div class="item">
+                    <h3 class="item-title">{{ result.title }}</h3>
+                    <p class="item-description">{{ result.author }}</p>
+                </div>
             {% endfor %}
-        </ul>
+        </view-container>
     {% endif %}
 </body>
 </html>

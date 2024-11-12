@@ -29,5 +29,5 @@ class PreferenceForm(FlaskForm):
     submit = SubmitField("Submit")
 
 class SearchForm(FlaskForm):
-    searchTerm = StringField("Search", validators=[InputRequired()])
+    searchTerm = StringField("Search", validators=[Optional()])
     submit = SubmitField("Submit")
