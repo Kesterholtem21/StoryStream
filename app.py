@@ -76,6 +76,13 @@ class Movie(db.Model):
     age_rating = db.Column(db.String, nullable=False)
     imdb_rating = db.Column(db.String, nullable=False)
 
+class Book(db.Model):
+    __tablename__ = 'Books'
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String, nullable=False)
+    author = db.Column(db.String, nullable=False)
+    genre = db.Column(db.String, nullable=False)
+
 
 class User(UserMixin, db.Model):
     __tablename__ = 'Users'
