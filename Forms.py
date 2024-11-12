@@ -27,3 +27,7 @@ class PreferenceForm(FlaskForm):
     genres = SelectMultipleField(
         "Pick Your Favorite Genres: ", validators=[], choices=[""])
     submit = SubmitField("Submit")
+
+class SearchForm(FlaskForm):
+    searchTerm = StringField("Search", validators=[InputRequired()])
+    submit = SubmitField("Submit")

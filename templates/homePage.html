@@ -22,9 +22,22 @@
             </ul>
         </div>
     </div>
+    
     <div class="search-container">
-        <input type="text" class="search-bar" placeholder="Search...">
-        <button class="search-button"><i class="fa-solid fa-search"></i></button>
+        <form method="post" class="search-form">
+            {{ form.hidden_tag() }}
+            {{ form.searchTerm(class="search-bar", placeholder="Search...") }}
+            <button type="submit" class="search-button"><i class="fa-solid fa-search"></i></button>
+        </form>
     </div>
+    
+    {% if search_results %}
+        <h2 class="results-heading">Search Results</h2>
+        <ul class="search-results">
+            {% for result in search_results %}
+                <li class="search-result">{{ result.title }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
 </body>
 </html>

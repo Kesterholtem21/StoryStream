@@ -7,7 +7,7 @@ from flask import flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin, LoginManager, login_required
 from flask_login import login_user, logout_user, current_user
-from Forms import RegisterForm, LoginForm, PreferenceForm
+from Forms import RegisterForm, LoginForm, PreferenceForm, SearchForm
 from Hasher import UpdatedHasher
 
 # make sure the script's directory is in Python's import path
@@ -125,14 +125,23 @@ def post_viewed():
 
 @app.get("/home/")
 def get_home():
-    # TODO create register GET route
-    return render_template("homePage.html", current_user=current_user)
+    form = SearchForm()
+    search_results = []
+    return render_template("homePage.html", form=form, search_results=search_results, current_user=current_user)
 
 
 @app.post("/home/")
 def post_home():
-    # TODO create register POST route
-    pass
+    form = SearchForm()
+    search_results = []
+
+    if form.validate_on_submit():
+        search_term = form.searchTerm.data.strip()
+        movie_results = Movie.query.filter(Movie.title.ilike(f"%{search_term}%")).all()
+        book_results = Book.query.filter(Book.title.ilike(f"%{search_term}%")).all()
+        search_results.extend(movie_results + book_results)
+
+    return render_template("homePage.html", form=form, search_results=search_results, current_user=current_user)
 
 @app.get("/favorites/")
 def get_favorites():
@@ -246,4 +255,5 @@ def get_logout():
     logout_user()
     flash('You have been logged out')
     return redirect(url_for('index'))
+
     

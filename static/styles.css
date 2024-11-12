@@ -194,6 +194,10 @@ input[type=submit]:hover {
     align-items: center;
 }
 
+.search-result {
+    align-items: right;
+}
+
 .logo{
     display: block;
     margin-bottom: 30px;
