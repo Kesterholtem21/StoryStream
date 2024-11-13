@@ -350,7 +350,7 @@ view-container .item {
     border-radius: 10px; /* Rounded corners */
     border: 1px solid #ccc;
     text-align: center;
-    font-size: 1.2em;
+    font-size: 0.8em;
     margin: 5px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for card effect */
     transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transition for hover effects */
