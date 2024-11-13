@@ -74,9 +74,9 @@ class Movie(db.Model):
     __tablename__ = 'Movies'
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String, nullable=False)
-    genre = db.Column(db.String, nullable=False)
-    age_rating = db.Column(db.String, nullable=False)
-    imdb_rating = db.Column(db.String, nullable=False)
+    #genre = db.Column(db.String, nullable=False)
+    #age_rating = db.Column(db.String, nullable=False)
+    #imdb_rating = db.Column(db.String, nullable=False)
 
 
 class Book(db.Model):
@@ -137,7 +137,8 @@ def get_home():
 @app.post("/home/")
 def post_home():
     form = SearchForm()
-    search_results = []
+    book_results = []
+    movie_results = []
 
     if form.validate_on_submit():
         search_term = form.searchTerm.data.strip()
@@ -145,9 +146,9 @@ def post_home():
             Movie.title.ilike(f"%{search_term}%")).all()
         book_results = Book.query.filter(
             Book.title.ilike(f"%{search_term}%")).all()
-        search_results.extend(movie_results + book_results)
 
-    return render_template("homePage.html", form=form, search_results=search_results, current_user=current_user)
+    return render_template("homePage.html", form=form, movie_results=movie_results,
+                           book_results=book_results, current_user=current_user)
 
 
 @app.get("/favorites/")

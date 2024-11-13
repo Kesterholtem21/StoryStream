@@ -471,3 +471,29 @@ view-container .item-description {
 .form-submit:hover {
     background-color: #333;
 }
+
+
+.tabs {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.tab-button {
+    background-color: #f1f1f1;
+    border: none;
+    padding: 10px 20px;
+    margin: 0 5px;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.tab-button.active {
+    background-color: #ccc;
+}
+
+.tab-button:hover {
+    background-color: #ddd;
+}
