@@ -6,7 +6,7 @@ from sqlalchemy.orm import sessionmaker
 
 # Define the path to the SQLite database, consistent with the Flask app
 script_dir = os.path.abspath(os.path.dirname(__file__))
-dbfile = os.path.join(script_dir, "imdb.sqlite3")
+dbfile = os.path.join(script_dir, "library.sqlite3")
 engine = create_engine(f"sqlite:///{dbfile}")
 
 # Set up the base and session

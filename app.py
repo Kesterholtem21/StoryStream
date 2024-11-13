@@ -28,7 +28,7 @@ sys.path.append(script_dir)
 # from library_forms import BookForm, AuthorForm
 
 scriptdir = os.path.dirname(os.path.abspath(__file__))
-dbfile = os.path.join(scriptdir, "imdb.sqlite3")
+dbfile = os.path.join(scriptdir, "library.sqlite3")
 pepfile = os.path.join(scriptdir, "pepper.bin")
 
 # open and read the contents of the pepper file into your pepper key
