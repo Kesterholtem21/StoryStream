@@ -1,0 +1,17 @@
+{
+    "compilerOptions": {
+      "module": "ES2022",
+      "target": "ES2022",
+      "noImplicitAny": true,
+      "removeComments": true,
+      "preserveConstEnums": true,
+      "sourceMap": false,
+      "outDir": "static",  // Output compiled JavaScript to the static folder
+      "esModuleInterop": true
+    },
+    "compileOnSave": true,
+    "include": [
+      "src/pages/*.ts"  // Include the TypeScript files in the src/pages directory
+    ]
+  }
+  
