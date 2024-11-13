@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://kit.fontawesome.com/d8283239b9.js" crossorigin="anonymous"></script>
-    <script type="module" src="../src/pages/tabs.ts"></script>
+    <script type="module" src="../static/tabs.js"></script>
     <link rel="stylesheet" href="/static/styles.css">
     <title>Home</title>
 </head>
@@ -36,30 +36,35 @@
         <h2 class="results-heading">Search Results</h2>
 
         <div class="tabs">
-            <button class="tab-button active" onclick="showTab('movies')">Movies</button>
-            <button class="tab-button" onclick="showTab('books')">Books</button>
+            <button class="tab-button active" data-tab="movies">Movies</button>
+            <button class="tab-button" data-tab="books">Books</button>
         </div>
 
-
-        <view-container class="grid-view">
-            <div id="movies" class="tab-content active">
-                {% for movie in movie_results %}
-                    <div class="item">
-                        <h3 class="item-title">{{ movie.title }}</h3>
-                        <!-- <p class="item-description">Genre: {{ movie.genre }}, Rating: {{ movie.age_rating }}</p> -->
-                    </div>
-                {% endfor %}
-            </div>
-            
-            <div id="books" class="tab-content">
-                {% for book in book_results %}
-                    <div class="item">
-                        <h3 class="item-title">{{ book.title }}</h3>
-                        <p class="item-description">Author: {{ book.author }}</p>
-                    </div>
-                {% endfor %}
-            </div>
+        <view-container id="movies" class="grid-view tab-content active">
+            {% if movie_results %}
+            {% for movie in movie_results %}
+                <div class="item">
+                    <h3 class="item-title">{{ movie.title }}</h3>
+                </div>
+            {% endfor %}
+            {% else %}
+            <h1>Sorry, no movies for that search term.</h1>
+            {% endif %}
+        </view-container>
+        
+        <view-container id="books" class="grid-view tab-content">
+            {% if book_results %}
+            {% for book in book_results %}
+                <div class="item">
+                    <h3 class="item-title">{{ book.title }}</h3>
+                    <p class="item-description">Author: {{ book.author }}</p>
+                </div>
+            {% endfor %}
+            {% else %}
+            <h1>Sorry, no books for that search term</h1>
+            {% endif %}
         </view-container>
     {% endif %}
 </body>
 </html>
+
