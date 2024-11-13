@@ -93,6 +93,7 @@ class User(UserMixin, db.Model):
     username = db.Column(db.String, nullable=False)
     age = db.Column(db.Integer, nullable=False)
     passwordHash = db.Column(db.Unicode, nullable=False)
+    isAdmin = db.Column(db.Integer, nullable=False)
 
     # make a write-only password property that just updates the stored hash
     @property
@@ -111,8 +112,9 @@ class User(UserMixin, db.Model):
 ###############################################################################
 # Route Handlers
 ###############################################################################
-with app.app_context():
-    db.create_all()
+#with app.app_context():
+    #db.drop_all()
+    #db.create_all()
 
 
 @app.get("/viewed/")
@@ -206,7 +208,7 @@ def post_register():
         if user is None:
             if form.password.data == form.confirmPassword.data:
                 user = User(username=form.username.data,
-                            password=form.password.data, age=form.age.data)  # type:ignore
+                            password=form.password.data, age=form.age.data, isAdmin=0)  # type:ignore
                 db.session.add(user)
                 db.session.commit()
                 return redirect(url_for('get_login'))
