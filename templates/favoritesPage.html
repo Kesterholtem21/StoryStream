@@ -28,14 +28,11 @@
     </div> -->
     <button id="toggleView">Toggle View</button>
     <view-container class="grid-view">
-        <div class="item">
-            <h3 class="item-title">Movie Title</h3>
-            <p class="item-description">Short description or plot summary of the movie.</p>
-        </div>
-        <div class="item">
-            <h3 class="item-title">Book Title</h3>
-            <p class="item-description">Brief synopsis or genre of the book.</p>
-        </div>
+        {% for movie in movies %}
+            <div class="item">
+                <h3 class="item-title">{{movie.title}}</h3>
+            </div>
+        {% endfor %}
     </view-container>
 
     <script src="\static\favoritesPage.js" type="module"></script>
