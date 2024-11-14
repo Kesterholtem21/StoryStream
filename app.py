@@ -2,7 +2,7 @@
 # Imports
 ###############################################################################
 from __future__ import annotations
-from flask import Flask, jsonify, request, render_template, redirect, url_for, abort, session
+from flask import Flask, request, render_template, redirect, url_for, abort, session
 from flask import flash
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import or_
@@ -176,7 +176,7 @@ def post_home():
 @app.post("/add_favorite")
 def add_favorite():
     if not current_user.is_authenticated:
-        return jsonify({"error": "User not logged in"}), 401
+        flash("User not logged in.", "error")
     
     data = request.get_json()
     item_id = data.get("id")
@@ -194,12 +194,11 @@ def add_favorite():
                 current_user.movie_favorites.append(movie)
         
         db.session.commit()
-        return jsonify({"success": True}), 200
 
     except (SQLAlchemyError, NoResultFound) as e:
         db.session.rollback()
         print(e)
-        return jsonify({"error": "An error occurred"}), 500
+        flash("An error occurred while adding to favorites.", "error")
 
 
 @app.get("/favorites/")
