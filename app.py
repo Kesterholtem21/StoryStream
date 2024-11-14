@@ -177,6 +177,7 @@ def post_home():
 def add_favorite():
     if not current_user.is_authenticated:
         flash("User not logged in.", "error")
+        return redirect(url_for('get_home'))
     
     data = request.get_json()
     item_id = data.get("id")
@@ -194,6 +195,7 @@ def add_favorite():
                 current_user.movie_favorites.append(movie)
         
         db.session.commit()
+        return redirect(url_for('get_home'))
 
     except (SQLAlchemyError, NoResultFound) as e:
         db.session.rollback()
