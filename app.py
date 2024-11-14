@@ -5,6 +5,7 @@ from __future__ import annotations
 from flask import Flask, request, render_template, redirect, url_for, abort, session
 from flask import flash
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import or_
 from flask_login import UserMixin, LoginManager, login_required
 from flask_login import login_user, logout_user, current_user
 from Forms import RegisterForm, LoginForm, PreferenceForm, SearchForm
@@ -147,7 +148,11 @@ def post_home():
         movie_results = Movie.query.filter(
             Movie.title.ilike(f"%{search_term}%")).all()
         book_results = Book.query.filter(
-            Book.title.ilike(f"%{search_term}%")).all()
+            or_(
+                Book.title.ilike(f"%{search_term}%"),
+                Book.author.ilike(f"%{search_term}%")
+            )
+        ).all()
 
     return render_template("homePage.html", form=form, movie_results=movie_results,
                            book_results=book_results, current_user=current_user)
