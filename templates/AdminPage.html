@@ -30,16 +30,18 @@
                     {% if thisUser.isAdmin %}
                         <p>Currently an Admin</p>
                         <br>
-                        <button class="admin-button">Remove Admin</button>
+                        <button class="admin-button" data-id="{{thisUser.id}}" data-type="user">Remove Admin</button>
                     {% endif %}
                     {% if not thisUser.isAdmin %}
                         <p>Currently a Regular User</p>
                         <br>
-                        <button class="admin-button">Add as Admin</button>
+                        <button class="admin-button" data-id="{{thisUser.id}}" data-type="user">Add as Admin</button>
                     {% endif %}
                 </div>
             {% endfor %}
         </view-container>
     </div>
+
+    <script src="\static\adminPage.js" type="module"></script>
 </body>
 </html>

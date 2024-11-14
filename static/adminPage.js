@@ -1,14 +1,30 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const tabButtons = document.querySelectorAll(".admin-button");
-    tabButtons.forEach(button => {
-        button.addEventListener("click", (event) => {
-            const tabName = event.currentTarget.getAttribute("data-tab");
-            if (tabName) {
-                document.getElementById("movies")?.classList.remove("active");
-                document.getElementById("books")?.classList.remove("active");
-                tabButtons.forEach(btn => btn.classList.remove("active"));
-                document.getElementById(tabName)?.classList.add("active");
-                button.classList.add("active");
+    const adminButtons = document.querySelectorAll(".admin-button");
+    adminButtons.forEach(button => {
+        button.addEventListener("click", async (event) => {
+            const target = event.target;
+            const id = target.dataset.id;
+            const type = target.dataset.type;
+            console.log(id);
+            console.log(type);
+            if (id && type) {
+                try {
+                    const response = await fetch("/change_admin/", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({ id, type }),
+                    });
+                    if (response.ok) {
+                    }
+                    else {
+                        console.error("Failed to change admin");
+                    }
+                }
+                catch (error) {
+                    console.error("Error:", error);
+                }
             }
         });
     });

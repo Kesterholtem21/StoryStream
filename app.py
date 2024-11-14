@@ -108,6 +108,7 @@ class User(UserMixin, db.Model):
     username = db.Column(db.String, nullable=False)
     age = db.Column(db.Integer, nullable=False)
     passwordHash = db.Column(db.Unicode, nullable=False)
+    isAdmin = db.Column(db.Integer, nullable=False)
     book_favorites = db.relationship('Book', secondary=user_book_favorites, backref='users')
     movie_favorites = db.relationship('Movie', secondary=user_movie_favorites, backref='users')
 
@@ -137,13 +138,35 @@ with app.app_context():
 def get_admin():
 
     listOfUsers = User.query.all()
+    for user in listOfUsers:
+        print(user.id)
 
     return render_template("AdminPage.html", users=listOfUsers)
 
-@app.get("/admin/")
-def post_admin():
-    #TODO the thing
-    pass
+@app.post("/change_admin/")
+def change_admin():
+    if not current_user.is_authenticated:
+        return jsonify({"error": "User not logged in"}), 401
+    
+    data = request.get_json()
+    item_id = data.get("id")
+    item_type = data.get("type")
+    try:
+        if item_type == "user":
+            user = User.query.get(item_id)
+            if user.isAdmin:
+                user.isAdmin = False
+            else:
+                user.isAdmin = True
+            
+        
+        db.session.commit()
+        return jsonify({"success": True}), 200
+
+    except (SQLAlchemyError, NoResultFound) as e:
+        db.session.rollback()
+        print(e)
+        return jsonify({"error": "An error occurred"}), 500
 
 @app.get("/viewed/")
 def get_viewed():
@@ -153,8 +176,10 @@ def get_viewed():
 
 @app.post("/viewed/")
 def post_viewed():
-    # TODO create register POST route
-    pass
+   pass
+
+
+    
 
 
 @app.get("/home/")
