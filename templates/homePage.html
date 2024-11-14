@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://kit.fontawesome.com/d8283239b9.js" crossorigin="anonymous"></script>
     <script type="module" src="../static/tabs.js"></script>
+    <script type="module" src="../static/favoritesHandler.js"></script>
     <link rel="stylesheet" href="/static/styles.css">
     <title>Home</title>
 </head>
@@ -45,6 +46,7 @@
             {% for movie in movie_results %}
                 <div class="item">
                     <h3 class="item-title">{{ movie.title }}</h3>
+                    <i class="fa-solid fa-heart favorite-icon" data-id="{{ movie.id }}" data-type="movie"></i>
                 </div>
             {% endfor %}
             {% else %}
@@ -58,6 +60,7 @@
                 <div class="item">
                     <h3 class="item-title">{{ book.title }}</h3>
                     <p class="item-description">Author: {{ book.author }}</p>
+                    <i class="fa-solid fa-heart favorite-icon" data-id="{{ book.id }}" data-type="book"></i>
                 </div>
             {% endfor %}
             {% else %}
