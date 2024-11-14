@@ -490,6 +490,21 @@ view-container .item-description {
     transition: background-color 0.3s;
 }
 
+.admin-button {
+    background-color: #f1f1f1;
+    border: none;
+    padding: 10px 20px;
+    margin: 0 5px;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.admin-button:hover{
+    background-color: cornflowerblue;
+}
+
 .tab-content {
     display: none;
 }

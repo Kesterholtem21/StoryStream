@@ -23,14 +23,23 @@
         </div>
     </div>
     <div class="overall-container"> 
-        <div class="user-container">
-            {% for user in users %}
+        <view-container class="list-view">
+            {% for thisUser in users %}
                 <div class="item">
-                    <h3 class="item-title">{{ user.username }}</h3>
+                    <h3 class="item-title">{{thisUser.username}}</h3>
+                    {% if thisUser.isAdmin %}
+                        <p>Currently an Admin</p>
+                        <br>
+                        <button class="admin-button">Remove Admin</button>
+                    {% endif %}
+                    {% if not thisUser.isAdmin %}
+                        <p>Currently a Regular User</p>
+                        <br>
+                        <button class="admin-button">Add as Admin</button>
+                    {% endif %}
                 </div>
             {% endfor %}
-
-        </div>
+        </view-container>
     </div>
 </body>
 </html>
