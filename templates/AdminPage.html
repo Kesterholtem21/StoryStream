@@ -22,9 +22,16 @@
             </ul>
         </div>
     </div>
+    <div class="search-container">
+        <form method="post" class="search-form">
+            {{ form.hidden_tag() }}
+            {{ form.searchTerm(class="search-bar", placeholder="Search...") }}
+            <button type="submit" class="search-button"><i class="fa-solid fa-search"></i></button>
+        </form>
+    </div>
     <div class="overall-container"> 
         <view-container class="list-view">
-            {% for thisUser in users %}
+            {% for thisUser in user_results %}
                 <div class="item">
                     <h3 class="item-title">{{thisUser.username}}</h3>
                     {% if thisUser.isAdmin %}

@@ -137,11 +137,14 @@ with app.app_context():
 @app.get("/admin/")
 def get_admin():
 
+    form = SearchForm()
+    searchResults = []
+
     listOfUsers = User.query.all()
     for user in listOfUsers:
         print(user.id)
 
-    return render_template("AdminPage.html", users=listOfUsers)
+    return render_template("AdminPage.html", users=listOfUsers, form=form, searchResults=searchResults)
 
 @app.post("/change_admin/")
 def change_admin():
@@ -167,6 +170,18 @@ def change_admin():
         db.session.rollback()
         print(e)
         return jsonify({"error": "An error occurred"}), 500
+    
+@app.post("/admin/")
+def post_admin():
+    form = SearchForm()
+    user_results = []
+
+    if form.validate_on_submit():
+        search_term = form.searchTerm.data.strip()
+        user_results = User.query.filter(User.username.ilike(f"%{search_term}%")).all()
+
+        return render_template("AdminPage.html", form=form, user_results=user_results, user=current_user)
+        
 
 @app.get("/viewed/")
 def get_viewed():
