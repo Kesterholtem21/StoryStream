@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://kit.fontawesome.com/d8283239b9.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="/static/styles.css">
-    <title>Profile</title>
+    <title>Admin</title>
 </head>
 <body>
     <div class="Navigation">
@@ -17,21 +17,19 @@
                 <li><a href="/home/"><i class="fa-solid fa-house-chimney"></i><p>Home</p></a></li>
                 <li><a href="/favorites/"><i class="fa-solid fa-heart"></i><p>Favorites</p></a></li>
                 <li><a href="/viewed/"><i class="fa-solid fa-square-check"></i><p>Viewed</p></a></li>
-                <li class="active"><a href="/profile/"><i class="fa-solid fa-user"></i><p>Profile</p></a></li>
-                {% if user.isAdmin %}
-                    <li><a href="/admin/"><i class="fa-solid fa-user"></i><p>Admin</p></a></li>
-                {% endif %}
+                <li><a href="/profile/"><i class="fa-solid fa-user"></i><p>Profile</p></a></li>
+                <li class="active"><a href="/admin/"><i class="fa-solid fa-user"></i><p>Admin</p></a></li>
             </ul>
         </div>
     </div>
     <div class="overall-container"> 
-        <div class="profile-container">
-            <div class="profile-header">
-                <img src="{{ url_for('static', filename='photo_2023-11-23_14-49-45.jpg') }}" alt="Profile Picture" class="profile-pic">
-                <h1 class="profile-name">Ethan Kesterholt</h1>
-                <p class="profile-bio">kesterhole21@gcc.edu </p>
-            </div>    
-            <a href="/logout" class="logout-btn">Logout</a>
+        <div class="user-container">
+            {% for user in users %}
+                <div class="item">
+                    <h3 class="item-title">{{ user.username }}</h3>
+                </div>
+            {% endfor %}
+
         </div>
     </div>
 </body>

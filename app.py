@@ -117,11 +117,22 @@ class User(UserMixin, db.Model):
     #db.drop_all()
     #db.create_all()
 
+@app.get("/admin/")
+def get_admin():
+
+    listOfUsers = User.query.all()
+
+    return render_template("AdminPage.html", users=listOfUsers)
+
+@app.get("/admin/")
+def post_admin():
+    #TODO the thing
+    pass
 
 @app.get("/viewed/")
 def get_viewed():
     # TODO create register GET route
-    return render_template("viewedPage.html")
+    return render_template("viewedPage.html" , user=current_user)
 
 
 @app.post("/viewed/")
@@ -162,7 +173,7 @@ def post_home():
 def get_favorites():
     # TODO create register GET route
     movies = Movie.query.all()  # TODO: Load the list of all pets from the database
-    return render_template("favoritesPage.html", movies=movies)
+    return render_template("favoritesPage.html", movies=movies, user=current_user)
 
 
 @app.post("/favorites/")
@@ -174,7 +185,7 @@ def post_favorites():
 @app.get("/profile/")
 def get_profile():
     # TODO create register GET route
-    return render_template("profilePage.html")
+    return render_template("profilePage.html", user=current_user)
 
 
 @app.post("/profile/")
@@ -187,7 +198,7 @@ def post_profile():
 def get_survey():
     # TODO create register GET route
     form = PreferenceForm()
-    return render_template("survey.html", form=form)
+    return render_template("survey.html", form=form, user=current_user)
 
 
 @app.post("/survey/")

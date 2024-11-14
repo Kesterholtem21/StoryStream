@@ -18,7 +18,9 @@
                 <li class="active"><a href="/favorites/"><i class="fa-solid fa-heart"></i><p>Favorites</p></a></li>
                 <li><a href="/viewed/"><i class="fa-solid fa-square-check"></i><p>Viewed</p></a></li>
                 <li><a href="/profile/"><i class="fa-solid fa-user"></i><p>Profile</p></a></li>
-                <li><a href="/survey/"><i class="fa-solid fa-user"></i><p>Survey</p></a></li>
+                {% if user.isAdmin %}
+                    <li><a href="/admin/"><i class="fa-solid fa-user"></i><p>Admin</p></a></li>
+                {% endif %}
             </ul>
         </div>
     </div>
