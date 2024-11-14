@@ -497,3 +497,15 @@ view-container .item-description {
     display: flex;
     flex-wrap: wrap;
 }
+
+.favorite-icon {
+    cursor: pointer;
+    color: gray;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+.favorite-icon.favorited {
+    color: red;
+}

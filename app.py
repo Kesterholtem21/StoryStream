@@ -2,7 +2,7 @@
 # Imports
 ###############################################################################
 from __future__ import annotations
-from flask import Flask, request, render_template, redirect, url_for, abort, session
+from flask import Flask, jsonify, request, render_template, redirect, url_for, abort, session
 from flask import flash
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import or_
@@ -10,6 +10,8 @@ from flask_login import UserMixin, LoginManager, login_required
 from flask_login import login_user, logout_user, current_user
 from Forms import RegisterForm, LoginForm, PreferenceForm, SearchForm
 from Hasher import UpdatedHasher
+from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy.orm.exc import NoResultFound
 
 # make sure the script's directory is in Python's import path
 # this is only required when run from a different directory
@@ -68,8 +70,20 @@ def load_user(uid: int) -> User | None:
 # Database Setup
 ###############################################################################
 
-# Database model for IMDB movies
+# many-to-many relationship tables
+user_book_favorites = db.Table(
+    'user_book_favorites',
+    db.Column('user_id', db.Integer, db.ForeignKey('Users.id'), primary_key=True),
+    db.Column('book_id', db.Integer, db.ForeignKey('Books.id'), primary_key=True)
+)
 
+user_movie_favorites = db.Table(
+    'user_movie_favorites',
+    db.Column('user_id', db.Integer, db.ForeignKey('Users.id'), primary_key=True),
+    db.Column('movie_id', db.Integer, db.ForeignKey('Movies.id'), primary_key=True)
+)
+
+# Database model for IMDB movies
 
 class Movie(db.Model):
     __tablename__ = 'Movies'
@@ -94,6 +108,9 @@ class User(UserMixin, db.Model):
     username = db.Column(db.String, nullable=False)
     age = db.Column(db.Integer, nullable=False)
     passwordHash = db.Column(db.Unicode, nullable=False)
+    book_favorites = db.relationship('Book', secondary=user_book_favorites, backref='users')
+    movie_favorites = db.relationship('Movie', secondary=user_movie_favorites, backref='users')
+
 
     # make a write-only password property that just updates the stored hash
     @property
@@ -113,7 +130,8 @@ class User(UserMixin, db.Model):
 # Route Handlers
 ###############################################################################
 with app.app_context():
-    db.create_all()
+    db.create_all()  # SQLAlchemy should create them in the correct order now
+
 
 
 @app.get("/viewed/")
@@ -154,6 +172,34 @@ def post_home():
 
     return render_template("homePage.html", form=form, movie_results=movie_results,
                            book_results=book_results, current_user=current_user)
+
+@app.post("/add_favorite")
+def add_favorite():
+    if not current_user.is_authenticated:
+        return jsonify({"error": "User not logged in"}), 401
+    
+    data = request.get_json()
+    item_id = data.get("id")
+    item_type = data.get("type")
+
+    try:
+        if item_type == "book":
+            book = Book.query.get(item_id)
+            if book and book not in current_user.book_favorites:
+                current_user.book_favorites.append(book)
+        
+        elif item_type == "movie":
+            movie = Movie.query.get(item_id)
+            if movie and movie not in current_user.movie_favorites:
+                current_user.movie_favorites.append(movie)
+        
+        db.session.commit()
+        return jsonify({"success": True}), 200
+
+    except (SQLAlchemyError, NoResultFound) as e:
+        db.session.rollback()
+        print(e)
+        return jsonify({"error": "An error occurred"}), 500
 
 
 @app.get("/favorites/")
