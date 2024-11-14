@@ -175,9 +175,6 @@ def post_home():
 
 @app.post("/add_favorite")
 def add_favorite():
-    if not current_user.is_authenticated:
-        flash("User not logged in.", "error")
-        return redirect(url_for('get_home'))
     
     data = request.get_json()
     item_id = data.get("id")
@@ -201,6 +198,7 @@ def add_favorite():
         db.session.rollback()
         print(e)
         flash("An error occurred while adding to favorites.", "error")
+        return redirect(url_for('get_home'))
 
 
 @app.get("/favorites/")
