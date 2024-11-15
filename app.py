@@ -203,9 +203,12 @@ def add_favorite():
 
 @app.get("/favorites/")
 def get_favorites():
-    # TODO create register GET route
-    movies = Movie.query.all()  # TODO: Load the list of all pets from the database
-    return render_template("favoritesPage.html", movies=movies)
+    
+    fav_books = current_user.book_favorites
+    fav_movies = current_user.movie_favorites
+    print(fav_books)
+    print(fav_movies)
+    return render_template("favoritesPage.html", current_user=current_user, movies=fav_movies, books=fav_books)
 
 
 @app.post("/favorites/")
