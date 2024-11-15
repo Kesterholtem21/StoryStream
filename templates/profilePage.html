@@ -18,7 +18,9 @@
                 <li><a href="/favorites/"><i class="fa-solid fa-heart"></i><p>Favorites</p></a></li>
                 <li><a href="/viewed/"><i class="fa-solid fa-square-check"></i><p>Viewed</p></a></li>
                 <li class="active"><a href="/profile/"><i class="fa-solid fa-user"></i><p>Profile</p></a></li>
-                <li><a href="/survey/"><i class="fa-solid fa-user"></i><p>Survey</p></a></li>
+                {% if user.isAdmin %}
+                    <li><a href="/admin/"><i class="fa-solid fa-lock"></i><p>Admin</p></a></li>
+                {% endif %}
             </ul>
         </div>
     </div>
@@ -26,8 +28,13 @@
         <div class="profile-container">
             <div class="profile-header">
                 <img src="{{ url_for('static', filename='photo_2023-11-23_14-49-45.jpg') }}" alt="Profile Picture" class="profile-pic">
-                <h1 class="profile-name">Ethan Kesterholt</h1>
-                <p class="profile-bio">kesterhole21@gcc.edu </p>
+                <h1 class="profile-name">{{user.username}}</h1>
+                {% if user.isAdmin %}
+                    <p class="profile-bio">Admin User</p>
+                {% endif %}
+                {% if not user.isAdmin %}
+                    <p class="profile-bio">Regular User</p>
+                {% endif %}
             </div>    
             <a href="/logout" class="logout-btn">Logout</a>
         </div>

@@ -24,8 +24,12 @@ class LoginForm(FlaskForm):
 
 class PreferenceForm(FlaskForm):
     # TODO fill this out
-    genres = SelectMultipleField(
-        "Pick Your Favorite Genres: ", validators=[], choices=[""])
+    genre1 = SelectField(
+        "Pick a Genre YOU like: ", validators=[], choices=["Romance", "Science Fiction", "Mystery", "Horror", "Historical Fiction", "Fantasy", "Adventure", "Thriller", "Fiction", "Non Fiction"])
+    genre2 = SelectField(
+        "Pick a Genre YOU like: ", validators=[], choices=["Romance", "Science Fiction", "Mystery", "Horror", "Historical Fiction", "Fantasy", "Adventure", "Thriller", "Fiction", "Non Fiction"])
+    genre3 = SelectField(
+        "Pick a Genre YOU like: ", validators=[], choices=["Romance", "Science Fiction", "Mystery", "Horror", "Historical Fiction", "Fantasy", "Adventure", "Thriller", "Fiction", "Non Fiction"])
     submit = SubmitField("Submit")
 
 class SearchForm(FlaskForm):
