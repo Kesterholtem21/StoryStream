@@ -290,18 +290,33 @@ def get_survey():
 @app.post("/survey/")
 def post_survey():
     form = PreferenceForm()
+    
+
+    
 
     if form.validate():
         genre1 = form.genre1.data
+        print(genre1)
         genre2 = form.genre2.data
+        print(genre2)
         genre3 = form.genre3.data
+        print(genre3)
         
+        
+        movie_results = Movie.query.filter(Movie.title.ilike(f"%{genre1}%")).all()
+        movie_results = movie_results + Movie.query.filter(Movie.title.ilike(f"%{genre2}%")).all()
+        movie_results = movie_results + Movie.query.filter(Movie.title.ilike(f"%{genre3}%")).all()
 
+        book_results = Book.query.filter(Book.genre.ilike(f"%{genre1}%")).all()
+        book_results = book_results + Book.query.filter(Book.genre.ilike(f"%{genre2}%")).all()
+        book_results = book_results + Book.query.filter(Book.genre.ilike(f"%{genre3}%")).all()
 
-        book_results = Book.query.filter(Book.genre.ilike(f"%{genre1}%") or Book.genre.ilike(f"%{genre2}%") or Book.genre.ilike(f"%{genre3}%")).all()
-        print(book_results)
-        return render_template("viewedPage.html", book_results=book_results)
-    redirect(url_for("get_survey"))
+        
+        
+        
+        
+        return render_template("viewedPage.html", book_results=book_results, movie_results=movie_results, user=current_user, form=form)
+    return redirect(url_for("get_survey"))
 
 
 @app.get("/register/")
