@@ -137,14 +137,16 @@ with app.app_context():
 @app.get("/admin/")
 def get_admin():
 
-    form = SearchForm()
-    searchResults = []
+    if current_user.isAdmin:
+        form = SearchForm()
+        searchResults = []
 
-    listOfUsers = User.query.all()
-    for user in listOfUsers:
-        print(user.id)
+        listOfUsers = User.query.all()
+        for user in listOfUsers:
+            print(user.id)
 
-    return render_template("AdminPage.html", users=listOfUsers, form=form, searchResults=searchResults)
+        return render_template("AdminPage.html", users=listOfUsers, form=form, searchResults=searchResults)
+    return redirect(url_for("get_home"))
 
 @app.post("/change_admin/")
 def change_admin():

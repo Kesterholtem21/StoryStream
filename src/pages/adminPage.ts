@@ -1,15 +1,33 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const adminButtons = document.querySelectorAll(".admin-button");
+    const adminButtons = document.querySelectorAll<HTMLButtonElement>(".admin-button");
     
 
     adminButtons.forEach(button => {
+
+        
+
         button.addEventListener("click", async (event) => {
-            const target = event.target as HTMLElement;
+            const target = event.target as HTMLButtonElement;
             const id = target.dataset.id;
             const type = target.dataset.type;
+            const isAdmin = target.dataset.isAdmin;
+            const parentDiv = button.parentElement;
+            const paragraph = parentDiv.querySelector("p");
+            
+            if(Number(isAdmin) === 1){
+                button.textContent = button.textContent === "Remove Admin" ? "Add as Admin" : "Remove Admin";
+                paragraph.textContent = paragraph.textContent === 
+                "Currently an Admin" ? "Currently a Regular User" : "Currently an Admin"
+            }
+            else if(Number(isAdmin) ===  0){
+                button.textContent = button.textContent === "Add as Admin" ? "Remove Admin" : "Add as Admin";
+                paragraph.textContent = paragraph.textContent === 
+                "Currently a Regular User" ? "Currently an Admin" : "Currently a Regular User"
+            }
 
-            console.log(id);
-            console.log(type);
+            
+            
+            
 
             if (id && type) {
                 try {
@@ -21,6 +39,8 @@ document.addEventListener("DOMContentLoaded", () => {
                         body: JSON.stringify({ id, type }),
                     });
                     if (response.ok) {
+
+                        
                         
                     }
                     else {
@@ -31,6 +51,13 @@ document.addEventListener("DOMContentLoaded", () => {
                     console.error("Error:", error);
                 }
             }
+
+
+            
+            
+            
+
+            
             
         });
     });

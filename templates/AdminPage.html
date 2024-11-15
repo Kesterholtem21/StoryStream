@@ -35,14 +35,18 @@
                 <div class="item">
                     <h3 class="item-title">{{thisUser.username}}</h3>
                     {% if thisUser.isAdmin %}
+                        <div>
                         <p>Currently an Admin</p>
                         <br>
-                        <button class="admin-button" data-id="{{thisUser.id}}" data-type="user">Remove Admin</button>
+                        <button class="admin-button" data-id="{{thisUser.id}}" data-type="user" data-is-Admin="1">Remove Admin</button>
+                        </div>
                     {% endif %}
                     {% if not thisUser.isAdmin %}
+                        <div>
                         <p>Currently a Regular User</p>
                         <br>
-                        <button class="admin-button" data-id="{{thisUser.id}}" data-type="user">Add as Admin</button>
+                        <button class="admin-button" data-id="{{thisUser.id}}" data-type="user" data-is-Admin="0">Add as Admin</button>
+                        </div>
                     {% endif %}
                 </div>
             {% endfor %}
