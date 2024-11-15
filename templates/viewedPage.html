@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://kit.fontawesome.com/d8283239b9.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="/static/styles.css">
+    <script type="module" src="../static/tabs.js"></script>
+    <script type="module" src="../static/favoritesHandler.js"></script>
     <title>Viewed</title>
 </head>
 <body>
@@ -34,12 +36,12 @@
         <h2 class="results-heading">Search Results</h2>
 
         <div class="tabs">
-            <button class="tab-button" data-tab="movies">Movies</button>
-            <button class="tab-button active" data-tab="books">Books</button>
+            <button class="tab-button active" data-tab="movies">Movies</button>
+            <button class="tab-button" data-tab="books">Books</button>
         </div>
         
 
-        <view-container id="movies" class="grid-view tab-content">
+        <view-container id="movies" class="grid-view tab-content active">
             {% if movie_results %}
             {% for movie in movie_results %}
                 <div class="item">
@@ -53,11 +55,12 @@
         </view-container>
 
 
-        <view-container id="books" class="grid-view tab-content active">
+        <view-container id="books" class="grid-view tab-content">
             {% if book_results %}
             {% for book in book_results %}
                 <div class="item">
                     <h3 class="item-title">{{ book.title }}</h3>
+                    <p class="item-description">Author: {{ book.author }}</p>
                     <i class="fa-solid fa-heart favorite-icon" data-id="{{ book.id }}" data-type="book"></i>
                 </div>
             {% endfor %}

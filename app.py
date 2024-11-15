@@ -83,6 +83,7 @@ user_movie_favorites = db.Table(
     db.Column('movie_id', db.Integer, db.ForeignKey('Movies.id'), primary_key=True)
 )
 
+
 # Database model for IMDB movies
 
 class Movie(db.Model):
@@ -109,8 +110,10 @@ class User(UserMixin, db.Model):
     age = db.Column(db.Integer, nullable=False)
     passwordHash = db.Column(db.Unicode, nullable=False)
     isAdmin = db.Column(db.Integer, nullable=False)
+    genres = db.Column(db.Unicode, nullable=False)
     book_favorites = db.relationship('Book', secondary=user_book_favorites, backref='users')
     movie_favorites = db.relationship('Movie', secondary=user_movie_favorites, backref='users')
+    
 
 
     # make a write-only password property that just updates the stored hash
@@ -131,6 +134,7 @@ class User(UserMixin, db.Model):
 # Route Handlers
 ###############################################################################
 with app.app_context():
+    
     db.create_all()  # SQLAlchemy should create them in the correct order now
 
 
@@ -188,7 +192,25 @@ def post_admin():
 @app.get("/viewed/")
 def get_viewed():
     # TODO create register GET route
-    return render_template("viewedPage.html" , user=current_user)
+
+
+    genres = current_user.genres
+    print(genres)
+    if genres:
+        book_results = Book.query.filter(Book.genre.ilike(f"%{genres[0]}%")).all()
+        book_results = book_results + Book.query.filter(Book.genre.ilike(f"%{genres[1]}%")).all()
+        book_results = book_results + Book.query.filter(Book.genre.ilike(f"%{genres[2]}%")).all()
+
+        movie_results = Movie.query.filter(Movie.title.ilike(f"%{genres[0]}%")).all()
+        movie_results = movie_results + Movie.query.filter(Movie.title.ilike(f"%{genres[1]}%")).all()
+        movie_results = movie_results + Movie.query.filter(Movie.title.ilike(f"%{genres[2]}%")).all()
+        return render_template("viewedPage.html" , user=current_user, movie_results=movie_results, book_results=book_results)
+    else:
+        movie_results = []
+        book_results = []
+
+
+        return render_template("viewedPage.html" , user=current_user, movie_results=movie_results, book_results=book_results)
 
 
 @app.post("/viewed/")
@@ -290,32 +312,21 @@ def get_survey():
 @app.post("/survey/")
 def post_survey():
     form = PreferenceForm()
-    
-
-    
 
     if form.validate():
         genre1 = form.genre1.data
-        print(genre1)
+        
         genre2 = form.genre2.data
-        print(genre2)
+       
         genre3 = form.genre3.data
-        print(genre3)
         
-        
-        movie_results = Movie.query.filter(Movie.title.ilike(f"%{genre1}%")).all()
-        movie_results = movie_results + Movie.query.filter(Movie.title.ilike(f"%{genre2}%")).all()
-        movie_results = movie_results + Movie.query.filter(Movie.title.ilike(f"%{genre3}%")).all()
+        genres = genre1 + "," + genre2 + "," + genre3
 
-        book_results = Book.query.filter(Book.genre.ilike(f"%{genre1}%")).all()
-        book_results = book_results + Book.query.filter(Book.genre.ilike(f"%{genre2}%")).all()
-        book_results = book_results + Book.query.filter(Book.genre.ilike(f"%{genre3}%")).all()
-
+        current_user.genres = genres
+        db.session.commit()
+        print(current_user.genres)
         
-        
-        
-        
-        return render_template("viewedPage.html", book_results=book_results, movie_results=movie_results, user=current_user, form=form)
+        return redirect(url_for("get_viewed"))
     return redirect(url_for("get_survey"))
 
 
@@ -336,7 +347,7 @@ def post_register():
         if user is None:
             if form.password.data == form.confirmPassword.data:
                 user = User(username=form.username.data,
-                            password=form.password.data, age=form.age.data, isAdmin=0)  # type:ignore
+                            password=form.password.data, age=form.age.data, isAdmin=0, genres="")  # type:ignore
                 db.session.add(user)
                 db.session.commit()
                 return redirect(url_for('get_login'))
