@@ -289,8 +289,19 @@ def get_survey():
 
 @app.post("/survey/")
 def post_survey():
-    # TODO create register POST route
-    pass
+    form = PreferenceForm()
+
+    if form.validate():
+        genre1 = form.genre1.data
+        genre2 = form.genre2.data
+        genre3 = form.genre3.data
+        
+
+
+        book_results = Book.query.filter(Book.genre.ilike(f"%{genre1}%") or Book.genre.ilike(f"%{genre2}%") or Book.genre.ilike(f"%{genre3}%")).all()
+        print(book_results)
+        return render_template("viewedPage.html", book_results=book_results)
+    redirect(url_for("get_survey"))
 
 
 @app.get("/register/")

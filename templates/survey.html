@@ -31,8 +31,16 @@
             <p class="instructions">Check up to 3 genres</p>
             
             <div class="form-group">
-                <label for="genres" class="form-label">{{ form.genres.label }}</label>
-                {{ form.genres(class="form-checkbox") }}
+                <label for="genres" class="form-label">{{ form.genre1.label }}</label>
+                {{ form.genre1() }}
+            </div>
+            <div class="form-group">
+                <label for="genres" class="form-label">{{ form.genre2.label }}</label>
+                {{ form.genre2() }}
+            </div>
+            <div class="form-group">
+                <label for="genres" class="form-label">{{ form.genre3.label }}</label>
+                {{ form.genre3() }}
             </div>
     
             <div class="form-group">

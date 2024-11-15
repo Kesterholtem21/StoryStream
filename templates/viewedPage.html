@@ -28,5 +28,42 @@
         <input type="text" class="search-bar" placeholder="Search...">
         <button class="search-button"><i class="fa-solid fa-search"></i></button>
     </div>
+
+
+    {% if movie_results or book_results %}
+        <h2 class="results-heading">Search Results</h2>
+
+        <div class="tabs">
+            <button class="tab-button active" data-tab="movies">Movies</button>
+            <button class="tab-button" data-tab="books">Books</button>
+        </div>
+
+        <view-container id="movies" class="grid-view tab-content active">
+            {% if movie_results %}
+            {% for movie in movie_results %}
+                <div class="item">
+                    <h3 class="item-title">{{ movie.title }}</h3>
+                    <i class="fa-solid fa-heart favorite-icon" data-id="{{ movie.id }}" data-type="movie"></i>
+                </div>
+            {% endfor %}
+            {% else %}
+            <h1>Sorry, no movies for that search term.</h1>
+            {% endif %}
+        </view-container>
+        
+        <view-container id="books" class="grid-view tab-content">
+            {% if book_results %}
+            {% for book in book_results %}
+                <div class="item">
+                    <h3 class="item-title">{{ book.title }}</h3>
+                    <p class="item-description">Author: {{ book.author }}</p>
+                    <i class="fa-solid fa-heart favorite-icon" data-id="{{ book.id }}" data-type="book"></i>
+                </div>
+            {% endfor %}
+            {% else %}
+            <h1>Sorry, no books for that search term</h1>
+            {% endif %}
+        </view-container>
+    {% endif %}
 </body>
 </html>
