@@ -48,7 +48,9 @@
             {% for movie in movie_results %}
                 <div class="item">
                     <h3 class="item-title">{{ movie.title }}</h3>
+                    {% if current_user.is_authenticated %}
                     <i class="fa-solid fa-heart favorite-icon" data-id="{{ movie.id }}" data-type="movie"></i>
+                    {% endif %}
                 </div>
             {% endfor %}
             {% else %}
@@ -62,7 +64,9 @@
                 <div class="item">
                     <h3 class="item-title">{{ book.title }}</h3>
                     <p class="item-description">Author: {{ book.author }}</p>
+                    {% if current_user.is_authenticated %}
                     <i class="fa-solid fa-heart favorite-icon" data-id="{{ book.id }}" data-type="book"></i>
+                    {% endif %}
                 </div>
             {% endfor %}
             {% else %}

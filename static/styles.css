@@ -525,3 +525,13 @@ view-container .item-description {
 .favorite-icon.favorited {
     color: red;
 }
+
+#favorites-error {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    height: 100vh;
+    margin: 0;
+    font-size: 2rem;
+}
