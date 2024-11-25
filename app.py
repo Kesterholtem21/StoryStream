@@ -2,7 +2,7 @@
 # Imports
 ###############################################################################
 from __future__ import annotations
-from flask import Flask, request, render_template, redirect, url_for, abort, session
+from flask import Flask, request, render_template, redirect, url_for, abort, session, jsonify
 from flask import flash
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import or_

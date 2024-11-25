@@ -62,6 +62,7 @@
             {% if book_results %}
             {% for book in book_results %}
                 <div class="item">
+                    <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#formModal"></button>
                     <h3 class="item-title">{{ book.title }}</h3>
                     <p class="item-description">Author: {{ book.author }}</p>
                     {% if current_user.is_authenticated %}
@@ -74,6 +75,37 @@
             {% endif %}
         </view-container>
     {% endif %}
+
+
+     <!-- Modal Form -->
+  <div class="modal fade" id="formModal" tabindex="-1" aria-labelledby="formModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="formModalLabel"></h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cancel"></button>
+        </div>
+        <div class="modal-body text-align-center">
+          <!-- JavaScript updates these values based on the item -->
+          <img id="modal-image" src="" class="img-fluid" alt="">
+          <title id="modal-title">Filler title</title>
+          <h1  id="modal-creator">Filler creator</h1>
+          <p id="modal-genre">Filler genres</p>
+          <p id="model-description">filler description</p>
+          <!-- JavaScript updates this to have all comments and add to them  -->
+          <div id="comments-for-item"></div>
+          <div class="add-comment-input">
+                <label for=""></label>
+                <input type="text">
+                <button></button>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
 </body>
 </html>
 
