@@ -2,7 +2,7 @@
 # Imports
 ###############################################################################
 from __future__ import annotations
-from flask import Flask, request, render_template, redirect, url_for, abort, session
+from flask import Flask, jsonify, request, render_template, redirect, url_for, abort, session
 from flask import flash
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import or_
@@ -141,6 +141,9 @@ with app.app_context():
 @app.get("/admin/")
 def get_admin():
 
+    if not current_user.is_authenticated:
+        return redirect(url_for("get_login"))
+
     if current_user.isAdmin:
         form = SearchForm()
         searchResults = []
@@ -193,6 +196,8 @@ def post_admin():
 def get_viewed():
     # TODO create register GET route
 
+    if not current_user.is_authenticated:
+        return redirect(url_for("get_login"))
 
     genres = current_user.genres
     print(genres)
@@ -223,6 +228,10 @@ def post_viewed():
 
 @app.get("/home/")
 def get_home():
+
+    if not current_user.is_authenticated:
+        return redirect(url_for("get_login"))
+
     form = SearchForm()
     search_results = []
     return render_template("homePage.html", form=form, search_results=search_results, current_user=current_user)
@@ -277,7 +286,11 @@ def add_favorite():
 
 
 @app.get("/favorites/")
-def get_favorites():    
+def get_favorites():  
+
+    if not current_user.is_authenticated:
+        return redirect(url_for("get_login"))
+
     fav_books = current_user.book_favorites
     fav_movies = current_user.movie_favorites
     print(fav_books)
@@ -294,6 +307,10 @@ def post_favorites():
 @app.get("/profile/")
 def get_profile():
     # TODO create register GET route
+
+    if not current_user.is_authenticated:
+        return redirect(url_for("get_login"))
+
     return render_template("profilePage.html", user=current_user)
 
 
@@ -306,6 +323,10 @@ def post_profile():
 @app.get("/survey/")
 def get_survey():
     # TODO create register GET route
+
+    if not current_user.is_authenticated:
+        return redirect(url_for("get_login"))
+
     form = PreferenceForm()
     return render_template("survey.html", form=form, user=current_user)
 
