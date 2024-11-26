@@ -46,7 +46,8 @@ async function activateModal(event) {
     console.log(typeof (index));
     console.log(index);
     console.log(commentList);
-    for (const comment of index.comments) {
+    for (const comment of commentList) {
+        console.log(comment.detailList);
         for (const detail of comment.detailList) {
             if (detail.item_id === Number(item)) {
                 console.log(comment);

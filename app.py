@@ -170,7 +170,7 @@ def get_comments():
     bookComments = BookComment.query.all()
     
     for comment in bookComments:
-        commentList.append((comment.userID,comment.bookID,comment.text))
+        commentList.append([comment.userID,comment.bookID,comment.text])
 
     
     
