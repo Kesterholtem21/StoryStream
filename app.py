@@ -10,8 +10,9 @@ from flask_login import UserMixin, LoginManager, login_required
 from flask_login import login_user, logout_user, current_user
 from Forms import RegisterForm, LoginForm, PreferenceForm, SearchForm
 from Hasher import UpdatedHasher
-from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy.exc import SQLAlchemyError, IntegrityError
 from sqlalchemy.orm.exc import NoResultFound
+import requests
 
 # make sure the script's directory is in Python's import path
 # this is only required when run from a different directory
@@ -73,14 +74,18 @@ def load_user(uid: int) -> User | None:
 # many-to-many relationship tables
 user_book_favorites = db.Table(
     'user_book_favorites',
-    db.Column('user_id', db.Integer, db.ForeignKey('Users.id'), primary_key=True),
-    db.Column('book_id', db.Integer, db.ForeignKey('Books.id'), primary_key=True)
+    db.Column('user_id', db.Integer, db.ForeignKey(
+        'Users.id'), primary_key=True),
+    db.Column('book_id', db.Integer, db.ForeignKey(
+        'Books.id'), primary_key=True)
 )
 
 user_movie_favorites = db.Table(
     'user_movie_favorites',
-    db.Column('user_id', db.Integer, db.ForeignKey('Users.id'), primary_key=True),
-    db.Column('movie_id', db.Integer, db.ForeignKey('Movies.id'), primary_key=True)
+    db.Column('user_id', db.Integer, db.ForeignKey(
+        'Users.id'), primary_key=True),
+    db.Column('movie_id', db.Integer, db.ForeignKey(
+        'Movies.id'), primary_key=True)
 )
 
 
@@ -90,9 +95,11 @@ class Movie(db.Model):
     __tablename__ = 'Movies'
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String, nullable=False)
-    #genre = db.Column(db.String, nullable=False)
-    #age_rating = db.Column(db.String, nullable=False)
-    #imdb_rating = db.Column(db.String, nullable=False)
+    release_date = db.Column(db.String, nullable=True)
+    poster_path = db.Column(db.String, nullable=True)
+    # genre = db.Column(db.String, nullable=False)
+    # age_rating = db.Column(db.String, nullable=False)
+    # imdb_rating = db.Column(db.String, nullable=False)
 
 
 class Book(db.Model):
@@ -111,12 +118,13 @@ class User(UserMixin, db.Model):
     passwordHash = db.Column(db.Unicode, nullable=False)
     isAdmin = db.Column(db.Integer, nullable=False)
     genres = db.Column(db.Unicode, nullable=False)
-    book_favorites = db.relationship('Book', secondary=user_book_favorites, backref='users')
-    movie_favorites = db.relationship('Movie', secondary=user_movie_favorites, backref='users')
-    
-
+    book_favorites = db.relationship(
+        'Book', secondary=user_book_favorites, backref='users')
+    movie_favorites = db.relationship(
+        'Movie', secondary=user_movie_favorites, backref='users')
 
     # make a write-only password property that just updates the stored hash
+
     @property
     def password(self):
         raise AttributeError("password is a write-only attribute")
@@ -134,7 +142,7 @@ class User(UserMixin, db.Model):
 # Route Handlers
 ###############################################################################
 with app.app_context():
-    
+
     db.create_all()  # SQLAlchemy should create them in the correct order now
 
 
@@ -152,11 +160,12 @@ def get_admin():
         return render_template("AdminPage.html", users=listOfUsers, form=form, searchResults=searchResults)
     return redirect(url_for("get_home"))
 
+
 @app.post("/change_admin/")
 def change_admin():
     if not current_user.is_authenticated:
         return jsonify({"error": "User not logged in"}), 401
-    
+
     data = request.get_json()
     item_id = data.get("id")
     item_type = data.get("type")
@@ -167,8 +176,7 @@ def change_admin():
                 user.isAdmin = False
             else:
                 user.isAdmin = True
-            
-        
+
         db.session.commit()
         return jsonify({"success": True}), 200
 
@@ -176,7 +184,8 @@ def change_admin():
         db.session.rollback()
         print(e)
         return jsonify({"error": "An error occurred"}), 500
-    
+
+
 @app.post("/admin/")
 def post_admin():
     form = SearchForm()
@@ -184,41 +193,43 @@ def post_admin():
 
     if form.validate_on_submit():
         search_term = form.searchTerm.data.strip()
-        user_results = User.query.filter(User.username.ilike(f"%{search_term}%")).all()
+        user_results = User.query.filter(
+            User.username.ilike(f"%{search_term}%")).all()
 
         return render_template("AdminPage.html", form=form, user_results=user_results, user=current_user)
-        
+
 
 @app.get("/viewed/")
 def get_viewed():
     # TODO create register GET route
 
-
     genres = current_user.genres
     print(genres)
     if genres:
-        book_results = Book.query.filter(Book.genre.ilike(f"%{genres[0]}%")).all()
-        book_results = book_results + Book.query.filter(Book.genre.ilike(f"%{genres[1]}%")).all()
-        book_results = book_results + Book.query.filter(Book.genre.ilike(f"%{genres[2]}%")).all()
+        book_results = Book.query.filter(
+            Book.genre.ilike(f"%{genres[0]}%")).all()
+        book_results = book_results + \
+            Book.query.filter(Book.genre.ilike(f"%{genres[1]}%")).all()
+        book_results = book_results + \
+            Book.query.filter(Book.genre.ilike(f"%{genres[2]}%")).all()
 
-        movie_results = Movie.query.filter(Movie.title.ilike(f"%{genres[0]}%")).all()
-        movie_results = movie_results + Movie.query.filter(Movie.title.ilike(f"%{genres[1]}%")).all()
-        movie_results = movie_results + Movie.query.filter(Movie.title.ilike(f"%{genres[2]}%")).all()
-        return render_template("viewedPage.html" , user=current_user, movie_results=movie_results, book_results=book_results)
+        movie_results = Movie.query.filter(
+            Movie.title.ilike(f"%{genres[0]}%")).all()
+        movie_results = movie_results + \
+            Movie.query.filter(Movie.title.ilike(f"%{genres[1]}%")).all()
+        movie_results = movie_results + \
+            Movie.query.filter(Movie.title.ilike(f"%{genres[2]}%")).all()
+        return render_template("viewedPage.html", user=current_user, movie_results=movie_results, book_results=book_results)
     else:
         movie_results = []
         book_results = []
 
-
-        return render_template("viewedPage.html" , user=current_user, movie_results=movie_results, book_results=book_results)
+        return render_template("viewedPage.html", user=current_user, movie_results=movie_results, book_results=book_results)
 
 
 @app.post("/viewed/")
 def post_viewed():
-   pass
-
-
-    
+    pass
 
 
 @app.get("/home/")
@@ -236,6 +247,8 @@ def post_home():
 
     if form.validate_on_submit():
         search_term = form.searchTerm.data.strip()
+
+        # Query SQLite database for movies and books
         movie_results = Movie.query.filter(
             Movie.title.ilike(f"%{search_term}%")).all()
         book_results = Book.query.filter(
@@ -245,12 +258,48 @@ def post_home():
             )
         ).all()
 
+        # Fetch data from TMDb API for movies
+        movie_api_results = fetch_tmdb_movies(search_term)
+        if movie_api_results:
+            for movie in movie_api_results:
+                # Add movies to the SQLite database
+                new_movie = Movie(
+                    id=movie["id"],  # Use API ID as primary key
+                    title=movie["title"],
+                    release_date=movie.get("release_date"),
+                    poster_path=movie.get("poster_path"),
+                )
+                try:
+                    db.session.add(new_movie)
+                    db.session.commit()
+                except IntegrityError:
+                    # Skip if the movie is already in the database
+                    db.session.rollback()
+
     return render_template("homePage.html", form=form, movie_results=movie_results,
                            book_results=book_results, current_user=current_user)
 
+
+def fetch_tmdb_movies(query):
+    api_key = 'e0b0133a262a178bcb578be381618ef7'
+    url = f"https://api.themoviedb.org/3/search/movie?api_key={
+        api_key}&query={query}"
+    try:
+        response = requests.get(url)
+        if response.status_code == 200:
+            data = response.json()
+            return data.get("results", [])
+        else:
+            print(f"Failed to fetch TMDb data: {response.status_code}")
+            return []
+    except requests.RequestException as e:
+        print(f"Error during API call: {e}")
+        return []
+
+
 @app.post("/add_favorite")
 def add_favorite():
-    
+
     data = request.get_json()
     item_id = data.get("id")
     item_type = data.get("type")
@@ -260,12 +309,12 @@ def add_favorite():
             book = Book.query.get(item_id)
             if book and book not in current_user.book_favorites:
                 current_user.book_favorites.append(book)
-        
+
         elif item_type == "movie":
             movie = Movie.query.get(item_id)
             if movie and movie not in current_user.movie_favorites:
                 current_user.movie_favorites.append(movie)
-        
+
         db.session.commit()
         return redirect(url_for('get_home'))
 
@@ -277,7 +326,7 @@ def add_favorite():
 
 
 @app.get("/favorites/")
-def get_favorites():    
+def get_favorites():
     fav_books = current_user.book_favorites
     fav_movies = current_user.movie_favorites
     print(fav_books)
@@ -316,17 +365,17 @@ def post_survey():
 
     if form.validate():
         genre1 = form.genre1.data
-        
+
         genre2 = form.genre2.data
-       
+
         genre3 = form.genre3.data
-        
+
         genres = genre1 + "," + genre2 + "," + genre3
 
         current_user.genres = genres
         db.session.commit()
         print(current_user.genres)
-        
+
         return redirect(url_for("get_viewed"))
     return redirect(url_for("get_survey"))
 
