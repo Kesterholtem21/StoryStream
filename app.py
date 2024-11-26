@@ -84,26 +84,6 @@ user_movie_favorites = db.Table(
 )
 
 
-#data for comments
-
-#comments relationships, user can have many comments, comment belongs to one user, user can comment on many items
-
-
-class BookComment(db.Model):
-    __tablename__ = "BookComments"
-    commentID = db.Column(db.Integer, primary_key = True)
-    userID = db.Column(db.Integer, db.ForeignKey('Users.id'))
-    bookID = db.Column(db.Integer, db.ForeignKey('Books.id'))
-    text = db.Column(db.String, nullable=False)
-
-class MovieComment(db.Model):
-    __tablename__ = "MovieComments"
-    commentID = db.Column(db.Integer, primary_key = True)
-    userID = db.Column(db.Integer, db.ForeignKey('Users.id'))
-    movieID = db.Column(db.Integer, db.ForeignKey('Movies.id'))
-    text = db.Column(db.String, nullable=False)
-
-
 # Database model for IMDB movies
 
 class Movie(db.Model):
