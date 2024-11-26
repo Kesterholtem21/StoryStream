@@ -4,7 +4,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     const modal = document.getElementById("formModal");
     modal.addEventListener("show.bs.modal",activateModal);
 
-    
 });
 
 

@@ -8,6 +8,12 @@
     <script type="module" src="../static/favoritesHandler.js"></script>
     <link rel="stylesheet" href="/static/styles.css">
     <script src="../static/homePage.js"></script>
+    <script crossorigin="anonymous"
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css"
+    rel="stylesheet" crossorigin="anonymous"
+    integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9">
     <title>Home</title>
 </head>
 <body>
@@ -48,10 +54,12 @@
             {% if movie_results %}
             {% for movie in movie_results %}
                 <div class="item">
+                    <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#formModal" data-title="{{movie.title}}" data-author="author" data-image="/static/photo_2023-11-23_14-49-45.jpg">
                     <h3 class="item-title">{{ movie.title }}</h3>
                     {% if current_user.is_authenticated %}
                     <i class="fa-solid fa-heart favorite-icon" data-id="{{ movie.id }}" data-type="movie"></i>
                     {% endif %}
+                    </button>
                 </div>
             {% endfor %}
             {% else %}
@@ -62,13 +70,14 @@
         <view-container id="books" class="grid-view tab-content">
             {% if book_results %}
             {% for book in book_results %}
-                <div class="item">
-                    <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#formModal" data-title="{{book.title}}" data-author="{{book.author}}" data-image="static\photo_2023-11-23_14-49-45.jpg">MORE?</button>
+                <div class="item" id="item-div">
+                    <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#formModal" data-title="{{book.title}}" data-author="{{book.author}}" data-image="/static/photo_2023-11-23_14-49-45.jpg">
                     <h3 class="item-title">{{ book.title }}</h3>
                     <p class="item-description">Author: {{ book.author }}</p>
                     {% if current_user.is_authenticated %}
                     <i class="fa-solid fa-heart favorite-icon" data-id="{{ book.id }}" data-type="book"></i>
                     {% endif %}
+                    </button>
                 </div>
             {% endfor %}
             {% else %}
@@ -89,10 +98,10 @@
         <div class="modal-body text-align-center">
           <!-- JavaScript updates these values based on the item -->
           <img id="modal-image" src="" class="img-fluid" alt="">
-          <title id="modal-title">Filler title</title>
-          <h1  id="modal-creator">Filler creator</h1>
+          <h1 id="modal-title">Filler title</h1>
+          <h2 id="modal-creator">Filler creator</h1>
           <p id="modal-genre">Filler genres</p>
-          <p id="model-description">filler description</p>
+          <p id="modal-description">filler description</p>
           <!-- JavaScript updates this to have all comments and add to them  -->
           <div id="comments-for-item"></div>
           <div class="add-comment-input">

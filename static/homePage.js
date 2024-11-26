@@ -12,8 +12,8 @@ function activateModal(event) {
     const modalImg = document.getElementById("modal-image");
     modalImg.setAttribute("src", image);
     modalImg.setAttribute("alt", "WOMP WOMP");
-    const modelTitle = document.getElementById("model-title");
-    modalImg.innerText = title;
-    const modelCreator = document.getElementById("model-creator");
-    modelCreator.innerText = author;
+    const modalTitle = document.getElementById("modal-title");
+    modalTitle.innerText = title;
+    const modalCreator = document.getElementById("modal-creator");
+    modalCreator.innerText = author;
 }
