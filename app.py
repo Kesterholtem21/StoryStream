@@ -83,6 +83,25 @@ user_movie_favorites = db.Table(
     db.Column('movie_id', db.Integer, db.ForeignKey('Movies.id'), primary_key=True)
 )
 
+#comments relationships, user can have many comments, comment belongs to one user, user can comment on many items
+
+
+class BookComment(db.Model):
+    __tablename__ = "BookComments"
+    commentID = db.Column(db.Integer, primary_key = True)
+    userID = db.Column(db.Integer, db.ForeignKey('Users.id'))
+    bookID = db.Column(db.Integer, db.ForeignKey('Books.id'))
+    text = db.Column(db.String, nullable=False)
+
+class MovieComment(db.Model):
+    __tablename__ = "MovieComments"
+    commentID = db.Column(db.Integer, primary_key = True)
+    userID = db.Column(db.Integer, db.ForeignKey('Users.id'))
+    movieID = db.Column(db.Integer, db.ForeignKey('Movies.id'))
+    text = db.Column(db.String, nullable=False)
+
+
+
 
 # Database model for IMDB movies
 
@@ -136,6 +155,33 @@ class User(UserMixin, db.Model):
 with app.app_context():
     
     db.create_all()  # SQLAlchemy should create them in the correct order now
+
+
+@app.get("/get_book_comments")
+def get_comments():
+
+    commentList = {}
+    data = request.get_json()
+    user_id = data.get("user")
+    item_id = data.get("id")
+    type = data.get("type")
+
+    if type == "Book":
+        bookComments = BookComment.query.filter(BookComment.bookID == item_id).all()
+        for comment in bookComments:
+            commentList.append(comment.userID,comment.text)
+
+    if type == "Movie":
+        MovieComments = MovieComment.query.filter(MovieComment.bookID == item_id).all()
+        for comment in MovieComments:
+            commentList.append(comment.userID,comment.text)
+    
+    return jsonify(commentList)
+    
+
+        
+
+
 
 
 @app.get("/admin/")
