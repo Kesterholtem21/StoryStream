@@ -5,7 +5,6 @@ namespace Comments{
 
     export interface Comment{
         user_id : number;
-        item_id : number;
         text : string;
     }
 }
@@ -20,76 +19,50 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
 async function activateModal(event: MouseEvent){
-    console.log("GETS HERE");
-    
+    console.log("GETS HERE")
 
     const targetBtn = event.relatedTarget as HTMLElement;
     const targetDiv = targetBtn.parentElement;
     const title = targetBtn.dataset.title;
     const author = targetBtn.dataset.author;
     const image = targetBtn.dataset.image;
-
     const user = targetBtn.dataset.user;
     const item = targetBtn.dataset.itemId;
     const type = targetBtn.dataset.type;
-
-    console.log(user);
-    console.log(item);
-    console.log(type);
 
     const modalImg = document.getElementById("modal-image");
     modalImg.setAttribute("src", image);
     modalImg.setAttribute("alt","WOMP WOMP");
 
-    const modelTitle = document.getElementById("modal-title");
+    const modelTitle = document.getElementById("model-title");
     modalImg.innerText = title;
     
-    const modelCreator = document.getElementById("modal-creator");
+    const modelCreator = document.getElementById("model-creator");
     modelCreator.innerText = author;
 
     const commentDiv = document.getElementById("comments-for-item")
-
-    let index = <Comments.CommentList><unknown>[]
-    if (type === "Book"){
-        const response = await fetch("/get_comments", {
+    const response = await fetch("/get_comments", {
             method:  "GET",
             headers: {
                 "Content-Type": "application/json",
-            }
+            },
+            body: JSON.stringify({user,item,type})
     });
-        index = <Comments.CommentList> await validateJSON(response);
-    }
-    
-    if (type === "Movie"){
-        const response = await fetch("/get_comments", {
-            method:  "GET",
-            headers: {
-                "Content-Type": "application/json",
-            }
-    });
-        index = <Comments.CommentList> await validateJSON(response);
-    }
 
-    //const index = <Comments.CommentList> await validateJSON(response);
+    const index = <Comments.CommentList> await validateJSON(response);
     
     for(const comment of index.comments){
+        const userLabel = document.createElement("h5");
+        const commnetField = document.createElement("p");
 
-        if(comment.item_id === Number(item)){
-            console.log(comment);
-            const userLabel = document.createElement("h5");
-            const commnetField = document.createElement("p");
+        targetDiv.appendChild(userLabel);
+        targetDiv.appendChild(commnetField);
 
-            targetDiv.appendChild(userLabel);
-            targetDiv.appendChild(commnetField);
-
-            userLabel.innerText = "User " + comment.user_id;
-            commnetField.innerText = comment.text;
-        }
-        
+        userLabel.innerText = "User " + comment.user_id;
+        commnetField.innerText = comment.text;
     }
 
-    const addCommentInput = <HTMLInputElement> document.getElementById("comment-input");
-    addCommentInput.value = "";
+    const addCommentInput = document.getElementById("comment-input");
     const submitBtn = document.getElementById("sumbit-comment");
 
     submitBtn.addEventListener("click", function(){
@@ -106,11 +79,8 @@ async function submitComment(itemId: string, user_id: string, text: string, type
         headers: {
             "Content-Type": "application/json",
         },
-        body: JSON.stringify({itemId,user_id,text,type})
+        body: JSON.stringify({itemId,user_id,text, type})
     });
-
-    const dbResponse = await validateJSON(response);
-    console.log(dbResponse)
 }
 
 function validateJSON(response: Response) {
