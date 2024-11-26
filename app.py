@@ -157,7 +157,7 @@ with app.app_context():
     db.create_all()  # SQLAlchemy should create them in the correct order now
 
 
-@app.get("/get_book_comments")
+@app.get("/get_comments")
 def get_comments():
 
     commentList = {}
@@ -179,7 +179,23 @@ def get_comments():
     return jsonify(commentList)
     
 
-        
+@app.post("/post_comments")
+def post_comments():
+
+    data = request.get_json()
+    user_id = data.get("user_id")
+    item_id = data.get("itemId")
+    text = data.get("text")
+    type = data.get("type")
+
+    if type == "Book":
+        #add new comment to book table
+        pass
+    
+    if type == "Movie":
+        #add new comment to movie table
+        pass
+
 
 
 
