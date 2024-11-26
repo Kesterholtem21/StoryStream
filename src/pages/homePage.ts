@@ -1,9 +1,7 @@
 namespace Comments{
     export interface CommentList{
         comments : Array<Comment>;
-        
     }
-
 
     export interface CommentDetails{
         user_id : number;
@@ -14,8 +12,6 @@ namespace Comments{
     export interface Comment{
         detailList : Array<CommentDetails>;
     }
-
-    
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
@@ -75,7 +71,7 @@ async function activateModal(event: MouseEvent){
                 "Content-Type": "application/json",
             }
     });
-        index = <Comments.CommentList> await validateJSON(response);
+        index = await validateJSON(response);
     }
 
     const commentList = index["comments"]
@@ -84,8 +80,8 @@ async function activateModal(event: MouseEvent){
     //const index = <Comments.CommentList> await validateJSON(response);
     console.log(index);
     console.log(commentList);
-    for(const comment of commentList){
-        console.log(comment.detailList);
+    for(const comment of index.comments){
+
         for(const detail of comment.detailList){
             if(detail.item_id === Number(item)){
                 console.log(comment);
