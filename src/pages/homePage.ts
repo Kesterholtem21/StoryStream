@@ -27,8 +27,8 @@ async function activateModal(event: MouseEvent){
     const author = targetBtn.dataset.author;
     const image = targetBtn.dataset.image;
     const user = targetBtn.dataset.user;
-    const item = targetBtn.dataset.itemId;
-    const type = targetBtn.dataset.type;
+    const book = targetBtn.dataset.bookId;
+    const type = targetBtn.dataset.book;
 
     const modalImg = document.getElementById("modal-image");
     modalImg.setAttribute("src", image);
@@ -46,7 +46,7 @@ async function activateModal(event: MouseEvent){
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({user,item,type})
+            body: JSON.stringify({user,book,type})
     });
 
     const index = <Comments.CommentList> await validateJSON(response);
@@ -62,25 +62,6 @@ async function activateModal(event: MouseEvent){
         commnetField.innerText = comment.text;
     }
 
-    const addCommentInput = document.getElementById("comment-input");
-    const submitBtn = document.getElementById("sumbit-comment");
-
-    submitBtn.addEventListener("click", function(){
-        submitComment(item,user,addCommentInput.innerText, type)
-    });
-
-
-}
-
-async function submitComment(itemId: string, user_id: string, text: string, type: string){
-    const addCommentInput = document.getElementById("comment-input");
-    const response = await fetch("/post_comments", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({itemId,user_id,text, type})
-    });
 }
 
 function validateJSON(response: Response) {
