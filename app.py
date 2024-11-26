@@ -169,14 +169,15 @@ def get_comments():
     if type == "Book":
         bookComments = BookComment.query.filter(BookComment.bookID == item_id).all()
         for comment in bookComments:
-            commentList.append(comment.userID,comment.text)
+            commentList.append(comment.userID,comment.bookID,comment.text)
 
     if type == "Movie":
         MovieComments = MovieComment.query.filter(MovieComment.bookID == item_id).all()
         for comment in MovieComments:
-            commentList.append(comment.userID,comment.text)
+            commentList.append(comment.userID,comment.movieID,comment.text)
     
-    return jsonify(commentList)
+    
+    return jsonify(commentList),200
     
 
 @app.post("/post_comments")
@@ -190,11 +191,14 @@ def post_comments():
 
     if type == "Book":
         #add new comment to book table
-        pass
+        comment = BookComment(userID=int(user_id),bookID=int(item_id),text=text)
     
     if type == "Movie":
         #add new comment to movie table
-        pass
+        comment = MovieComment(userID=int(user_id),movieID=int(item_id),text=text)
+    
+    db.session.add(comment)
+    db.session.commit()
 
 
 
