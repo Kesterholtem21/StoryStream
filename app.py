@@ -155,29 +155,27 @@ class User(UserMixin, db.Model):
 with app.app_context():
     
     db.create_all()  # SQLAlchemy should create them in the correct order now
+    examplecomment = BookComment(userID=1,bookID=1,text="THIS IS A COMMENT")
+    db.session.add(examplecomment)
+    db.session.commit()
 
 
-@app.get("/get_comments")
+@app.get("/get_book_comments")
 def get_comments():
 
-    commentList = {}
-    data = request.get_json()
-    user_id = data.get("user")
-    item_id = data.get("id")
-    type = data.get("type")
+    commentList = []
+    
 
-    if type == "Book":
-        bookComments = BookComment.query.filter(BookComment.bookID == item_id).all()
-        for comment in bookComments:
-            commentList.append(comment.userID,comment.bookID,comment.text)
+    
+    bookComments = BookComment.query.all()
+    
+    for comment in bookComments:
+        commentList.append((comment.userID,comment.bookID,comment.text))
 
-    if type == "Movie":
-        MovieComments = MovieComment.query.filter(MovieComment.bookID == item_id).all()
-        for comment in MovieComments:
-            commentList.append(comment.userID,comment.movieID,comment.text)
     
     
-    return jsonify(commentList),200
+    print((commentList))
+    return jsonify({"success": True, "comments" : commentList}), 200
     
 
 @app.post("/post_comments")

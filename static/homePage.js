@@ -25,7 +25,7 @@ async function activateModal(event) {
     const commentDiv = document.getElementById("comments-for-item");
     let index = [];
     if (type === "Book") {
-        const response = await fetch("/get_comments", {
+        const response = await fetch("/get_book_comments", {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -42,15 +42,21 @@ async function activateModal(event) {
         });
         index = await validateJSON(response);
     }
+    const commentList = index["comments"];
+    console.log(typeof (index));
+    console.log(index);
+    console.log(commentList);
     for (const comment of index.comments) {
-        if (comment.item_id === Number(item)) {
-            console.log(comment);
-            const userLabel = document.createElement("h5");
-            const commnetField = document.createElement("p");
-            targetDiv.appendChild(userLabel);
-            targetDiv.appendChild(commnetField);
-            userLabel.innerText = "User " + comment.user_id;
-            commnetField.innerText = comment.text;
+        for (const detail of comment.detailList) {
+            if (detail.item_id === Number(item)) {
+                console.log(comment);
+                const userLabel = document.createElement("h5");
+                const commnetField = document.createElement("p");
+                targetDiv.appendChild(userLabel);
+                targetDiv.appendChild(commnetField);
+                userLabel.innerText = "User " + detail.user_id;
+                commnetField.innerText = detail.text;
+            }
         }
     }
     const addCommentInput = document.getElementById("comment-input");
