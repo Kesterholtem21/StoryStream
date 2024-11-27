@@ -339,33 +339,41 @@ input[type=submit]:hover {
 
 .overall-container {
     display: flex;
-    justify-content: center;      /* Center horizontally */
-    align-items: center;          /* Center vertically */
-    min-height: 100vh;            /* Full viewport height */
+    justify-content: center;      
+    align-items: center;         
+    min-height: 100vh;        
 }
-/* Default styling for items (card-like appearance) */
+
 view-container .item {
-    background-color: #ffffff; /* White background for the cards */
+    background-color: #ffffff; 
     padding: 20px;
-    border-radius: 10px; /* Rounded corners */
+    border-radius: 10px; 
     border: 1px solid #ccc;
     text-align: center;
     font-size: 0.8em;
     margin: 5px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for card effect */
-    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transition for hover effects */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-/* Hover effect to make the card "lift" */
+.movie-poster {
+    width: 100%;
+    height: auto; 
+    border-radius: 10px; 
+    max-width: 200px;
+    margin-bottom: 10px; 
+    object-fit: cover; 
+}
+
 view-container .item:hover {
-    transform: translateY(-5px); /* Lifts the card slightly */
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Stronger shadow on hover */
+    transform: translateY(-5px); 
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); 
 }
 
 /* Title of the movie or book */
 view-container .item-title {
     font-size: 1.5em;
-    font-weight: bold;
+    /* font-weight: bold; */
     margin: 10px 0;
     color: #333; /* Dark color for readability */
 }
