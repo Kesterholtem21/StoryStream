@@ -1,3 +1,20 @@
+namespace Comments{
+    export interface CommentList{
+        comments : Array<Comment>;
+    }
+
+    export interface CommentDetails{
+        user_id : number;
+        item_id : number;
+        text : string;
+    }
+
+    export interface Comment{
+        detailList : Array<CommentDetails>;
+    }
+}
+
+
 document.addEventListener("DOMContentLoaded", async () => {
     
 
@@ -6,9 +23,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 });
 
-
-function activateModal(event: MouseEvent){
-    console.log("GETS HERE")
+async function activateModal(event: MouseEvent){
+    console.log("GETS HERE");
+    
 
     const targetBtn = event.relatedTarget as HTMLElement;
     const targetDiv = targetBtn.parentElement;
@@ -16,14 +33,119 @@ function activateModal(event: MouseEvent){
     const author = targetBtn.dataset.author;
     const image = targetBtn.dataset.image;
 
+    const user = targetBtn.dataset.user;
+    const item = targetBtn.dataset.itemId;
+    const type = targetBtn.dataset.type;
+
+    console.log(user);
+    console.log(item);
+    console.log(type);
+
     const modalImg = document.getElementById("modal-image");
     modalImg.setAttribute("src", image);
     modalImg.setAttribute("alt","WOMP WOMP");
 
-    const modelTitle = document.getElementById("model-title");
+    const modelTitle = document.getElementById("modal-title");
     modalImg.innerText = title;
     
-    const modelCreator = document.getElementById("model-creator");
+    const modelCreator = document.getElementById("modal-creator");
     modelCreator.innerText = author;
 
+
+    //moving on to comments
+    const commentDiv = document.getElementById("comments-for-item");
+
+    console.log("2nd")
+    let index = <Comments.CommentList><unknown>[];
+    if (type === "Book"){
+        const response = await fetch("/get_book_comments", {
+            method:  "GET",
+            headers: {
+                "Content-Type": "application/json",
+            }
+    });
+        index = <Comments.CommentList> await validateJSON(response);
+    }
+    
+    if (type === "Movie"){
+        const response = await fetch("/get_comments", {
+            method:  "GET",
+            headers: {
+                "Content-Type": "application/json",
+            }
+    });
+        index = await validateJSON(response);
+        index = <Comments.CommentList> await validateJSON(response);
+    }
+    
+    const commentList = index["comments"]
+    console.log(typeof(index))
+
+    //const index = <Comments.CommentList> await validateJSON(response);
+    console.log(index);
+    console.log(commentList);
+    
+    for(const comment of index.comments){
+
+        for(const detail of comment.detailList){
+            if(detail.item_id === Number(item)){
+                console.log(comment);
+                const userLabel = document.createElement("h5");
+                const commnetField = document.createElement("p");
+    
+                targetDiv.appendChild(userLabel);
+                targetDiv.appendChild(commnetField);
+    
+                userLabel.innerText = "User " + detail.user_id;
+                commnetField.innerText = detail.text;
+            }
+        } 
+        // if(comment.item_id === Number(item)){
+        //     console.log(comment);
+        //     const userLabel = document.createElement("h5");
+        //     const commnetField = document.createElement("p");
+
+        //     targetDiv.appendChild(userLabel);
+        //     targetDiv.appendChild(commnetField);
+
+        //     userLabel.innerText = "User " + comment.user_id;
+        //     commnetField.innerText = comment.text;
+        // }
+        
+    }
+
+    const addCommentInput = <HTMLInputElement> document.getElementById("comment-input");
+    addCommentInput.value = "";
+    const submitBtn = document.getElementById("sumbit-comment");
+
+    submitBtn.addEventListener("click", function(){
+        submitComment(item,user,addCommentInput.innerText, type)
+    });
+
+
+}
+
+
+
+async function submitComment(itemId: string, user_id: string, text: string, type: string){
+    const addCommentInput = document.getElementById("comment-input");
+    const response = await fetch("/post_comments", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({itemId,user_id,text,type})
+    });
+
+    const dbResponse = await validateJSON(response);
+    console.log(dbResponse)
+}
+
+function validateJSON(response: Response) {
+    if (response.ok) {
+        console.log("IT should BE good")
+        return response.json();
+    } else {
+        return Promise.reject(response);
+    }
 }

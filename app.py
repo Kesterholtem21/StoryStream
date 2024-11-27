@@ -88,6 +88,20 @@ user_movie_favorites = db.Table(
         'Movies.id'), primary_key=True)
 )
 
+#Database for comments
+class BookComment(db.Model):
+    __tablename__ = "BookComments"
+    commentID = db.Column(db.Integer, primary_key = True)
+    userID = db.Column(db.Integer, db.ForeignKey('Users.id'))
+    bookID = db.Column(db.Integer, db.ForeignKey('Books.id'))
+    text = db.Column(db.String, nullable=False)
+
+class MovieComment(db.Model):
+    __tablename__ = "MovieComments"
+    commentID = db.Column(db.Integer, primary_key = True)
+    userID = db.Column(db.Integer, db.ForeignKey('Users.id'))
+    movieID = db.Column(db.Integer, db.ForeignKey('Movies.id'))
+    text = db.Column(db.String, nullable=False)
 
 # Database model for IMDB movies
 
@@ -142,8 +156,62 @@ class User(UserMixin, db.Model):
 # Route Handlers
 ###############################################################################
 with app.app_context():
-
+    examplecomment = BookComment(userID=1,bookID=1,text="THIS IS A COMMENT")
+    db.session.add(examplecomment)
     db.create_all()  # SQLAlchemy should create them in the correct order now
+
+
+@app.get("/get_book_comments")
+def get_comments():
+
+    
+    
+    commentList = []
+    data = request.get_json()
+    user_id = data.get("user")
+    item_id = data.get("id")
+    type = data.get("type")
+
+    
+    bookComments = BookComment.query.all()
+    
+    for comment in bookComments:
+        commentList.append((comment.userID,comment.bookID,comment.text))
+    if type == "Book":
+        bookComments = BookComment.query.filter(BookComment.bookID == item_id).all()
+        for comment in bookComments:
+            commentList.append(comment.userID,comment.bookID,comment.text)
+
+    if type == "Movie":
+        MovieComments = MovieComment.query.filter(MovieComment.bookID == item_id).all()
+        for comment in MovieComments:
+            commentList.append(comment.userID,comment.movieID,comment.text)
+    
+    
+    print((commentList))
+    return jsonify({"success": True, "comments" : commentList}), 200
+
+
+@app.post("/post_comments")
+def post_comments():
+
+    data = request.get_json()
+    user_id = data.get("user_id")
+    item_id = data.get("itemId")
+    text = data.get("text")
+    type = data.get("type")
+
+    if type == "Book":
+        #add new comment to book table
+        comment = BookComment(userID=int(user_id),bookID=int(item_id),text=text)
+    
+    if type == "Movie":
+        #add new comment to movie table
+        comment = MovieComment(userID=int(user_id),movieID=int(item_id),text=text)
+    
+    db.session.add(comment)
+    db.session.commit()
+
 
 
 @app.get("/admin/")
