@@ -23,6 +23,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     
 
+
+    
+
 });
 
 async function activateModal(event: MouseEvent){
@@ -99,6 +102,8 @@ async function activateModal(event: MouseEvent){
     });
 
 
+
+
 }
 
 
@@ -113,6 +118,8 @@ async function submitComment(itemId: string, user_id: string, text: string, type
         },
         body: JSON.stringify({itemId,user_id,text,type})
     });
+
+    
 
     const dbResponse = await validateJSON(response);
 }
