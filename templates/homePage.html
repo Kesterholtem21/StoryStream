@@ -54,7 +54,7 @@
             {% if movie_results %}
             {% for movie in movie_results %}
                 <div class="item">
-                    <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#formModal" data-title="{{movie.title}}" data-author="{{movie.release_date}}" data-image="https://image.tmdb.org/t/p/w500{{ movie.poster_path }}">
+                    <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#formModal" data-title="{{movie.title}}" data-author="{{movie.release_date}}" data-image="https://image.tmdb.org/t/p/w500{{ movie.poster_path }}" data-user="{{current_user.id}}" data-item-id="{{movie.id}}" data-type="Movie">
                     <img class="movie-poster" src="https://image.tmdb.org/t/p/w500{{ movie.poster_path }}" alt="{{ movie.title }}">
                     <h3 class="item-title">{{ movie.title }}</h3>
                     {% if current_user.is_authenticated %}

@@ -1,16 +1,14 @@
 namespace Comments{
-    export interface CommentList{
-        comments : Array<Comment>;
-    }
-
-    export interface CommentDetails{
-        user_id : number;
-        item_id : number;
-        text : string;
-    }
-
     export interface Comment{
-        detailList : Array<CommentDetails>;
+        userID : number;
+        itemID: number;
+        text: string;
+        timestamp: string;
+    }
+
+    export interface CommentList{
+        success: boolean;
+        commentList: Array<Comment>
     }
 }
 
@@ -26,7 +24,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 async function activateModal(event: MouseEvent){
     console.log("GETS HERE");
     
-
+    const modalCommentDiv = document.getElementById("comments-for-item")
+    modalCommentDiv.innerHTML = '';
     const targetBtn = event.relatedTarget as HTMLElement;
     const targetDiv = targetBtn.parentElement;
     const title = targetBtn.dataset.title;
@@ -55,63 +54,42 @@ async function activateModal(event: MouseEvent){
     //moving on to comments
     const commentDiv = document.getElementById("comments-for-item");
 
-    console.log("2nd")
-    let index = <Comments.CommentList><unknown>[];
-    if (type === "Book"){
-        const response = await fetch("/get_book_comments", {
-            method:  "GET",
-            headers: {
-                "Content-Type": "application/json",
-            }
-    });
-        index = <Comments.CommentList> await validateJSON(response);
-    }
     
-    if (type === "Movie"){
-        const response = await fetch("/get_comments", {
-            method:  "GET",
-            headers: {
-                "Content-Type": "application/json",
-            }
+
+
+    const response = await fetch(`/get_${type}_comments`, {
+        method:  "GET",
+        headers: {
+            "Content-Type": "application/json",
+        }
     });
-        index = await validateJSON(response);
-        index = <Comments.CommentList> await validateJSON(response);
-    }
+    const index = <Comments.CommentList> await validateJSON(response);
     
-    const commentList = index["comments"]
-    console.log(typeof(index))
+    
+
+    
+    
 
     //const index = <Comments.CommentList> await validateJSON(response);
-    console.log(index);
-    console.log(commentList);
+    console.log("Index: " + index);
+    console.log("CommentList: " + index.commentList)
+   
     
-    for(const comment of index.comments){
-
-        for(const detail of comment.detailList){
-            if(detail.item_id === Number(item)){
+    
+    for(const comment of index.commentList){
+            if(comment.itemID === Number(item)){
                 console.log(comment);
                 const userLabel = document.createElement("h5");
                 const commnetField = document.createElement("p");
     
-                targetDiv.appendChild(userLabel);
-                targetDiv.appendChild(commnetField);
+                modalCommentDiv.appendChild(userLabel);
+                modalCommentDiv.appendChild(commnetField);
+
+
     
-                userLabel.innerText = "User " + detail.user_id;
-                commnetField.innerText = detail.text;
-            }
-        } 
-        // if(comment.item_id === Number(item)){
-        //     console.log(comment);
-        //     const userLabel = document.createElement("h5");
-        //     const commnetField = document.createElement("p");
-
-        //     targetDiv.appendChild(userLabel);
-        //     targetDiv.appendChild(commnetField);
-
-        //     userLabel.innerText = "User " + comment.user_id;
-        //     commnetField.innerText = comment.text;
-        // }
-        
+                userLabel.innerText = "User " + comment.userID;
+                commnetField.innerText = comment.text;
+            }  
     }
 
     const addCommentInput = <HTMLInputElement> document.getElementById("comment-input");
@@ -119,11 +97,12 @@ async function activateModal(event: MouseEvent){
     const submitBtn = document.getElementById("sumbit-comment");
 
     submitBtn.addEventListener("click", function(){
-        submitComment(item,user,addCommentInput.innerText, type)
+         submitComment(item,user,addCommentInput.value, type)
     });
 
 
 }
+
 
 
 

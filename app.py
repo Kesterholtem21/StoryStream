@@ -13,6 +13,7 @@ from Hasher import UpdatedHasher
 from sqlalchemy.exc import SQLAlchemyError, IntegrityError
 from sqlalchemy.orm.exc import NoResultFound
 import requests
+from datetime import datetime, UTC
 
 # make sure the script's directory is in Python's import path
 # this is only required when run from a different directory
@@ -161,35 +162,55 @@ with app.app_context():
     db.create_all()  # SQLAlchemy should create them in the correct order now
 
 
-@app.get("/get_book_comments")
-def get_comments():
+@app.get("/get_Book_comments")
+def get_Book_comments():
 
+    try:
+        bookComments = BookComment.query.all()
+    
+        commentList = [
+            {
+                "userID" : comment.userID,
+                "itemID" : comment.bookID,
+                "text"  : comment.text,
+                "timestamp" : datetime.now(UTC).isoformat()
+            }
+            for comment in bookComments
+        ]
     
     
-    commentList = []
-    data = request.get_json()
-    user_id = data.get("user")
-    item_id = data.get("id")
-    type = data.get("type")
+    
+        #print((commentList))
+        print(commentList)
+        return jsonify({"success": True, "commentList" : commentList}), 200
+    except Exception as e:
+        return jsonify({"success" : False, "error" : str(e)}), 500
+    
 
-    
-    bookComments = BookComment.query.all()
-    
-    for comment in bookComments:
-        commentList.append((comment.userID,comment.bookID,comment.text))
-    if type == "Book":
-        bookComments = BookComment.query.filter(BookComment.bookID == item_id).all()
-        for comment in bookComments:
-            commentList.append(comment.userID,comment.bookID,comment.text)
+@app.get("/get_Movie_comments")
+def get_Movie_comments():
 
-    if type == "Movie":
-        MovieComments = MovieComment.query.filter(MovieComment.bookID == item_id).all()
-        for comment in MovieComments:
-            commentList.append(comment.userID,comment.movieID,comment.text)
+    try:
+        movieComments = MovieComment.query.all()
+    
+        commentList = [
+            {
+                "userID" : comment.userID,
+                "itemID" : comment.movieID,
+                "text"  : comment.text,
+                "timestamp" : datetime.now(UTC).isoformat()
+            }
+            for comment in movieComments
+        ]
     
     
-    print((commentList))
-    return jsonify({"success": True, "comments" : commentList}), 200
+    
+        #print((commentList))
+        print(commentList)
+        return jsonify({"success": True, "commentList" : commentList}), 200
+    except Exception as e:
+        return jsonify({"success" : False, "error" : str(e)}), 500
+    
 
 
 @app.post("/post_comments")
