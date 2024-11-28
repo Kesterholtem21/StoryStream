@@ -19,6 +19,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     const modal = document.getElementById("formModal");
     modal.addEventListener("show.bs.modal",activateModal);
 
+    const submitBtn = document.getElementById("sumbit-comment");
+
+    
+
 });
 
 async function activateModal(event: MouseEvent){
@@ -36,8 +40,7 @@ async function activateModal(event: MouseEvent){
     const item = targetBtn.dataset.itemId;
     const type = targetBtn.dataset.type;
 
-    console.log(user);
-    console.log(item);
+
     console.log(type);
 
     const modalImg = document.getElementById("modal-image");
@@ -67,12 +70,6 @@ async function activateModal(event: MouseEvent){
     
     
 
-    
-    
-
-    //const index = <Comments.CommentList> await validateJSON(response);
-    console.log("Index: " + index);
-    console.log("CommentList: " + index.commentList)
    
     
     
@@ -94,6 +91,7 @@ async function activateModal(event: MouseEvent){
 
     const addCommentInput = <HTMLInputElement> document.getElementById("comment-input");
     addCommentInput.value = "";
+    
     const submitBtn = document.getElementById("sumbit-comment");
 
     submitBtn.addEventListener("click", function(){
@@ -117,7 +115,6 @@ async function submitComment(itemId: string, user_id: string, text: string, type
     });
 
     const dbResponse = await validateJSON(response);
-    console.log(dbResponse)
 }
 
 function validateJSON(response: Response) {

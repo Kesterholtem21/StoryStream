@@ -157,8 +157,6 @@ class User(UserMixin, db.Model):
 # Route Handlers
 ###############################################################################
 with app.app_context():
-    examplecomment = BookComment(userID=1,bookID=1,text="THIS IS A COMMENT")
-    db.session.add(examplecomment)
     db.create_all()  # SQLAlchemy should create them in the correct order now
 
 
@@ -181,7 +179,6 @@ def get_Book_comments():
     
     
         #print((commentList))
-        print(commentList)
         return jsonify({"success": True, "commentList" : commentList}), 200
     except Exception as e:
         return jsonify({"success" : False, "error" : str(e)}), 500
@@ -206,7 +203,6 @@ def get_Movie_comments():
     
     
         #print((commentList))
-        print(commentList)
         return jsonify({"success": True, "commentList" : commentList}), 200
     except Exception as e:
         return jsonify({"success" : False, "error" : str(e)}), 500
@@ -222,16 +218,24 @@ def post_comments():
     text = data.get("text")
     type = data.get("type")
 
-    if type == "Book":
-        #add new comment to book table
-        comment = BookComment(userID=int(user_id),bookID=int(item_id),text=text)
+    print(type)
+
+    try:
+        if type == "Book":
+            #add new comment to book table
+            comment = BookComment(userID=int(user_id),bookID=int(item_id),text=text)
+            db.session.add(comment)
+            db.session.commit()
     
-    if type == "Movie":
-        #add new comment to movie table
-        comment = MovieComment(userID=int(user_id),movieID=int(item_id),text=text)
-    
-    db.session.add(comment)
-    db.session.commit()
+        if type == "Movie":
+            #add new comment to movie table
+            comment = MovieComment(userID=int(user_id),movieID=int(item_id),text=text)
+            db.session.add(comment)
+            db.session.commit()
+
+        return jsonify({"success" : True}), 200
+    except Exception as e:
+        return jsonify({"success" : False}), 500
 
 
 
