@@ -21,12 +21,29 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const submitBtn = document.getElementById("sumbit-comment");
 
+    const topCloseBtn = document.getElementById("top-close");
+    topCloseBtn.addEventListener("click", () =>{
+        removeEL(submitBtn);
+
+    });
+
+    const bottomCloseBtn = document.getElementById("bottom-close");
+    bottomCloseBtn.addEventListener("click", () =>{
+        removeEL(submitBtn);
+
+
+    });
+
     
 
 
     
 
 });
+
+function removeEL(btn: HTMLElement){
+    btn.removeEventListener;
+}
 
 async function activateModal(event: MouseEvent){
     console.log("GETS HERE");
