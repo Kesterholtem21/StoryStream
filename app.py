@@ -171,7 +171,8 @@ def get_Book_comments():
                 "userID" : comment.userID,
                 "itemID" : comment.bookID,
                 "text"  : comment.text,
-                "timestamp" : datetime.now(UTC).isoformat()
+                #"timestamp" : datetime.now(UTC).isoformat(),
+                "type"  :   "Book"
             }
             for comment in bookComments
         ]
@@ -195,7 +196,8 @@ def get_Movie_comments():
                 "userID" : comment.userID,
                 "itemID" : comment.movieID,
                 "text"  : comment.text,
-                "timestamp" : datetime.now(UTC).isoformat()
+                "timestamp" : datetime.now(UTC).isoformat(),
+                "type"  :   "Movie"
             }
             for comment in movieComments
         ]

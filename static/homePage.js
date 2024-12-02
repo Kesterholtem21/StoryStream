@@ -1,9 +1,25 @@
+var Comments;
+(function (Comments) {
+    Comments.currentComment = null;
+})(Comments || (Comments = {}));
 document.addEventListener("DOMContentLoaded", async () => {
     const modal = document.getElementById("formModal");
     modal.addEventListener("show.bs.modal", activateModal);
+    const submitBtn = document.getElementById("sumbit-comment");
+    submitBtn.addEventListener("click", () => {
+        console.log("SUBMITTED");
+        submitComment(Comments.currentComment.itemID, Comments.currentComment.userID, Comments.currentComment.text, Comments.currentComment.type);
+    });
 });
 async function activateModal(event) {
     console.log("GETS HERE");
+    Comments.currentComment = {
+        itemID: "",
+        userID: "",
+        text: "",
+        timestamp: "",
+        type: "",
+    };
     const modalCommentDiv = document.getElementById("comments-for-item");
     modalCommentDiv.innerHTML = '';
     const targetBtn = event.relatedTarget;
@@ -14,8 +30,6 @@ async function activateModal(event) {
     const user = targetBtn.dataset.user;
     const item = targetBtn.dataset.itemId;
     const type = targetBtn.dataset.type;
-    console.log(user);
-    console.log(item);
     console.log(type);
     const modalImg = document.getElementById("modal-image");
     modalImg.setAttribute("src", image);
@@ -32,10 +46,9 @@ async function activateModal(event) {
         }
     });
     const index = await validateJSON(response);
-    console.log("Index: " + index);
-    console.log("CommentList: " + index.commentList);
     for (const comment of index.commentList) {
-        if (comment.itemID === Number(item)) {
+        if (String(comment.itemID) === item) {
+            console.log("MAKES IT IN HERE");
             console.log(comment);
             const userLabel = document.createElement("h5");
             const commnetField = document.createElement("p");
@@ -47,13 +60,15 @@ async function activateModal(event) {
     }
     const addCommentInput = document.getElementById("comment-input");
     addCommentInput.value = "";
-    const submitBtn = document.getElementById("sumbit-comment");
-    submitBtn.addEventListener("click", function () {
-        submitComment(item, user, addCommentInput.value, type);
-    });
+    Comments.currentComment.itemID = item;
+    Comments.currentComment.userID = user;
+    Comments.currentComment.text = addCommentInput.value;
+    Comments.currentComment.type = type;
 }
 async function submitComment(itemId, user_id, text, type) {
     const addCommentInput = document.getElementById("comment-input");
+    Comments.currentComment.text = addCommentInput.value;
+    text = Comments.currentComment.text;
     const response = await fetch("/post_comments", {
         method: "POST",
         headers: {
@@ -62,7 +77,6 @@ async function submitComment(itemId, user_id, text, type) {
         body: JSON.stringify({ itemId, user_id, text, type })
     });
     const dbResponse = await validateJSON(response);
-    console.log(dbResponse);
 }
 function validateJSON(response) {
     if (response.ok) {

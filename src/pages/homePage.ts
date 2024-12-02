@@ -1,9 +1,12 @@
 namespace Comments{
+    export let currentComment: Comment | null = null;
+
     export interface Comment{
-        userID : number;
-        itemID: number;
+        userID : string;
+        itemID: string;
         text: string;
         timestamp: string;
+        type: string;
     }
 
     export interface CommentList{
@@ -20,33 +23,32 @@ document.addEventListener("DOMContentLoaded", async () => {
     modal.addEventListener("show.bs.modal",activateModal);
 
     const submitBtn = document.getElementById("sumbit-comment");
-
-    const topCloseBtn = document.getElementById("top-close");
-    topCloseBtn.addEventListener("click", () =>{
-        removeEL(submitBtn);
-
-    });
-
-    const bottomCloseBtn = document.getElementById("bottom-close");
-    bottomCloseBtn.addEventListener("click", () =>{
-        removeEL(submitBtn);
-
-
-    });
-
+    //submitBtn.replaceWith(submitBtn.cloneNode(true));
+    submitBtn.addEventListener("click", () => {
+        console.log("SUBMITTED");
+        submitComment(
+            Comments.currentComment.itemID,
+            Comments.currentComment.userID,
+            Comments.currentComment.text,
+            Comments.currentComment.type
+        );
+    }
     
 
-
-    
-
+);
 });
 
-function removeEL(btn: HTMLElement){
-    btn.removeEventListener;
-}
+
 
 async function activateModal(event: MouseEvent){
     console.log("GETS HERE");
+    Comments.currentComment = {
+        itemID: "",
+        userID: "",
+        text: "",
+        timestamp: "",
+        type: "",
+    };
     
     const modalCommentDiv = document.getElementById("comments-for-item")
     modalCommentDiv.innerHTML = '';
@@ -94,7 +96,8 @@ async function activateModal(event: MouseEvent){
     
     
     for(const comment of index.commentList){
-            if(comment.itemID === Number(item)){
+            if(String(comment.itemID) === item){
+                console.log("MAKES IT IN HERE")
                 console.log(comment);
                 const userLabel = document.createElement("h5");
                 const commnetField = document.createElement("p");
@@ -111,23 +114,20 @@ async function activateModal(event: MouseEvent){
 
     const addCommentInput = <HTMLInputElement> document.getElementById("comment-input");
     addCommentInput.value = "";
-    
-    const submitBtn = document.getElementById("sumbit-comment");
 
-    submitBtn.addEventListener("click", function(){
-         submitComment(item,user,addCommentInput.value, type)
-    });
-
-
-
-
+    Comments.currentComment.itemID = item;
+    Comments.currentComment.userID = user;
+    Comments.currentComment.text = addCommentInput.value;
+    Comments.currentComment.type = type;
 }
 
 
 
 
 async function submitComment(itemId: string, user_id: string, text: string, type: string){
-    const addCommentInput = document.getElementById("comment-input");
+    const addCommentInput = <HTMLInputElement> document.getElementById("comment-input");
+    Comments.currentComment.text = addCommentInput.value;
+    text = Comments.currentComment.text;
     const response = await fetch("/post_comments", {
         method: "POST",
         headers: {
