@@ -57,6 +57,9 @@ async function activateModal(event: MouseEvent){
     const title = targetBtn.dataset.title;
     const author = targetBtn.dataset.author;
     const image = targetBtn.dataset.image;
+    const genres = targetBtn.dataset.genres;
+    const description = targetBtn.dataset.description;
+    console.log(genres);
 
     const user = targetBtn.dataset.user;
     const item = targetBtn.dataset.itemId;
@@ -70,11 +73,16 @@ async function activateModal(event: MouseEvent){
     modalImg.setAttribute("alt","WOMP WOMP");
 
     const modelTitle = document.getElementById("modal-title");
-    modalImg.innerText = title;
+    modelTitle.innerText = title;
     
     const modelCreator = document.getElementById("modal-creator");
     modelCreator.innerText = author;
 
+    const modelGenre = document.getElementById("modal-genre");
+    modelGenre.innerText = genres;
+
+    const modalDescription = document.getElementById("modal-description");
+    modalDescription.innerText = description;
 
     //moving on to comments
     const commentDiv = document.getElementById("comments-for-item");
