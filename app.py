@@ -89,22 +89,26 @@ user_movie_favorites = db.Table(
         'Movies.id'), primary_key=True)
 )
 
-#Database for comments
+# Database for comments
+
+
 class BookComment(db.Model):
     __tablename__ = "BookComments"
-    commentID = db.Column(db.Integer, primary_key = True)
+    commentID = db.Column(db.Integer, primary_key=True)
     userID = db.Column(db.Integer, db.ForeignKey('Users.id'))
     bookID = db.Column(db.Integer, db.ForeignKey('Books.id'))
     text = db.Column(db.String, nullable=False)
 
+
 class MovieComment(db.Model):
     __tablename__ = "MovieComments"
-    commentID = db.Column(db.Integer, primary_key = True)
+    commentID = db.Column(db.Integer, primary_key=True)
     userID = db.Column(db.Integer, db.ForeignKey('Users.id'))
     movieID = db.Column(db.Integer, db.ForeignKey('Movies.id'))
     text = db.Column(db.String, nullable=False)
 
 # Database model for IMDB movies
+
 
 class Movie(db.Model):
     __tablename__ = 'Movies'
@@ -115,6 +119,21 @@ class Movie(db.Model):
     # genre = db.Column(db.String, nullable=False)
     # age_rating = db.Column(db.String, nullable=False)
     # imdb_rating = db.Column(db.String, nullable=False)
+
+
+class Genres(db.Model):
+    __tablename__ = 'Genres'
+    id = db.Column(db.Integer, primary_key=True)
+    genre_name = db.Column(db.String, nullable=False)
+
+
+movie_genres = db.Table(
+    'movie_genre',
+    db.Column('movies_id', db.Integer, db.ForeignKey(
+        'Movies.id'), primary_key=True),
+    db.Column('genre_id', db.Integer, db.ForeignKey(
+        'Genres.id'), primary_key=True)
+)
 
 
 class Book(db.Model):
@@ -165,50 +184,45 @@ def get_Book_comments():
 
     try:
         bookComments = BookComment.query.all()
-    
+
         commentList = [
             {
-                "userID" : comment.userID,
-                "itemID" : comment.bookID,
-                "text"  : comment.text,
-                #"timestamp" : datetime.now(UTC).isoformat(),
-                "type"  :   "Book"
+                "userID": comment.userID,
+                "itemID": comment.bookID,
+                "text": comment.text,
+                # "timestamp" : datetime.now(UTC).isoformat(),
+                "type":   "Book"
             }
             for comment in bookComments
         ]
-    
-    
-    
-        #print((commentList))
-        return jsonify({"success": True, "commentList" : commentList}), 200
+
+        # print((commentList))
+        return jsonify({"success": True, "commentList": commentList}), 200
     except Exception as e:
-        return jsonify({"success" : False, "error" : str(e)}), 500
-    
+        return jsonify({"success": False, "error": str(e)}), 500
+
 
 @app.get("/get_Movie_comments")
 def get_Movie_comments():
 
     try:
         movieComments = MovieComment.query.all()
-    
+
         commentList = [
             {
-                "userID" : comment.userID,
-                "itemID" : comment.movieID,
-                "text"  : comment.text,
-                "timestamp" : datetime.now(UTC).isoformat(),
-                "type"  :   "Movie"
+                "userID": comment.userID,
+                "itemID": comment.movieID,
+                "text": comment.text,
+                "timestamp": datetime.now(UTC).isoformat(),
+                "type":   "Movie"
             }
             for comment in movieComments
         ]
-    
-    
-    
-        #print((commentList))
-        return jsonify({"success": True, "commentList" : commentList}), 200
+
+        # print((commentList))
+        return jsonify({"success": True, "commentList": commentList}), 200
     except Exception as e:
-        return jsonify({"success" : False, "error" : str(e)}), 500
-    
+        return jsonify({"success": False, "error": str(e)}), 500
 
 
 @app.post("/post_comments")
@@ -224,21 +238,22 @@ def post_comments():
 
     try:
         if type == "Book":
-            #add new comment to book table
-            comment = BookComment(userID=int(user_id),bookID=int(item_id),text=text)
+            # add new comment to book table
+            comment = BookComment(userID=int(user_id),
+                                  bookID=int(item_id), text=text)
             db.session.add(comment)
             db.session.commit()
-    
+
         if type == "Movie":
-            #add new comment to movie table
-            comment = MovieComment(userID=int(user_id),movieID=int(item_id),text=text)
+            # add new comment to movie table
+            comment = MovieComment(userID=int(
+                user_id), movieID=int(item_id), text=text)
             db.session.add(comment)
             db.session.commit()
 
-        return jsonify({"success" : True}), 200
+        return jsonify({"success": True}), 200
     except Exception as e:
-        return jsonify({"success" : False}), 500
-
+        return jsonify({"success": False}), 500
 
 
 @app.get("/admin/")
@@ -308,18 +323,35 @@ def get_viewed():
         book_results = book_results + \
             Book.query.filter(Book.genre.ilike(f"%{genres[2]}%")).all()
 
-        movie_results = Movie.query.filter(
-            Movie.title.ilike(f"%{genres[0]}%")).all()
-        movie_results = movie_results + \
-            Movie.query.filter(Movie.title.ilike(f"%{genres[1]}%")).all()
-        movie_results = movie_results + \
-            Movie.query.filter(Movie.title.ilike(f"%{genres[2]}%")).all()
+        movie_api_results = fetch_tmdb_genre(genres)
+        if movie_api_results:
+            movie_results = movie_api_results
         return render_template("viewedPage.html", user=current_user, movie_results=movie_results, book_results=book_results)
     else:
         movie_results = []
         book_results = []
 
         return render_template("viewedPage.html", user=current_user, movie_results=movie_results, book_results=book_results)
+
+
+def fetch_tmdb_genre(genres):
+    api_key = 'e0b0133a262a178bcb578be381618ef7'
+    movie_results = []
+
+    for genre in genres:
+        url = f"https://api.themoviedb.org/3/search/movie?api_key={
+            api_key}&query={genre}"
+        try:
+            response = requests.get(url)
+            if response.status_code == 200:
+                data = response.json()
+                movie_results.extend(data.get("results", []))
+            else:
+                print("Failed to fetch TMDb data")
+        except requests.RequestException as e:
+            print("Error")
+
+    return movie_results
 
 
 @app.post("/viewed/")
@@ -343,33 +375,10 @@ def post_home():
     if form.validate_on_submit():
         search_term = form.searchTerm.data.strip()
 
-        # Query SQLite database for movies and books
-        movie_results = Movie.query.filter(
-            Movie.title.ilike(f"%{search_term}%")).all()
-        book_results = Book.query.filter(
-            or_(
-                Book.title.ilike(f"%{search_term}%"),
-                Book.author.ilike(f"%{search_term}%")
-            )
-        ).all()
-
         # Fetch data from TMDb API for movies
         movie_api_results = fetch_tmdb_movies(search_term)
         if movie_api_results:
-            for movie in movie_api_results:
-                # Add movies to the SQLite database
-                new_movie = Movie(
-                    id=movie["id"],  # Use API ID as primary key
-                    title=movie["title"],
-                    release_date=movie.get("release_date"),
-                    poster_path=movie.get("poster_path"),
-                )
-                try:
-                    db.session.add(new_movie)
-                    db.session.commit()
-                except IntegrityError:
-                    # Skip if the movie is already in the database
-                    db.session.rollback()
+            movie_results = movie_api_results
 
     return render_template("homePage.html", form=form, movie_results=movie_results,
                            book_results=book_results, current_user=current_user)
