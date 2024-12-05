@@ -375,6 +375,13 @@ def post_home():
     if form.validate_on_submit():
         search_term = form.searchTerm.data.strip()
 
+        book_results = Book.query.filter(
+            or_(
+                Book.title.ilike(f"%{search_term}%"),
+                Book.author.ilike(f"%{search_term}%")
+            )
+        ).all()
+
         # Fetch data from TMDb API for movies
         movie_api_results = fetch_tmdb_movies(search_term)
         if movie_api_results:
@@ -401,6 +408,22 @@ def fetch_tmdb_movies(query):
         return []
 
 
+def fetch_movie_by_id(movie_id):
+    api_key = 'e0b0133a262a178bcb578be381618ef7'
+    url = f"https://api.themoviedb.org/3/movie/{movie_id}?api_key={api_key}"
+    try:
+        response = requests.get(url)
+        if response.status_code == 200:
+            data = response.json()
+            return data
+        else:
+            print(f"Failed to fetch TMDb data: {response.status_code}")
+            return None
+    except requests.RequestException as e:
+        print(f"Error during API call: {e}")
+        return None
+
+
 @app.post("/add_favorite")
 def add_favorite():
 
@@ -415,7 +438,14 @@ def add_favorite():
                 current_user.book_favorites.append(book)
 
         elif item_type == "movie":
-            movie = Movie.query.get(item_id)
+            movie_data = fetch_movie_by_id(item_id)
+            movie = Movie.query.filter_by(id=item_id).first()
+            if not movie:
+                movie = Movie(
+                    id=movie_data['id'],
+                    title=movie_data['title'],
+                    poster_path=movie_data['poster_path']
+                )
             if movie and movie not in current_user.movie_favorites:
                 current_user.movie_favorites.append(movie)
 

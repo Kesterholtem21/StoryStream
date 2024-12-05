@@ -41,7 +41,7 @@
                 {% if movies %}
                 {% for movie in movies %}
                     <div class="item">
-                        <img class="movie-poster" src="https://image.tmdb.org/t/p/w500{{ movie.poster_path }}" alt="{{ movie.title }}">
+                        <img class="movie-poster" src="https://image.tmdb.org/t/p/w500/{{ movie.poster_path }}" alt="{{ movie.title }}">
                         <h3 class="item-title">{{ movie.title }}</h3>
                         <i class="fa-solid fa-heart favorite-icon active favorited" data-id="{{ movie.id }}" data-type="movie"></i>
                     </div>
