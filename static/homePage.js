@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const modal = document.getElementById("formModal");
     modal.addEventListener("show.bs.modal", activateModal);
     const submitBtn = document.getElementById("sumbit-comment");
-    submitBtn.addEventListener("click", () => {
+    submitBtn.addEventListener("click", async () => {
         console.log("SUBMITTED");
         submitComment(Comments.currentComment.itemID, Comments.currentComment.userID, Comments.currentComment.text, Comments.currentComment.type);
     });
@@ -27,6 +27,9 @@ async function activateModal(event) {
     const title = targetBtn.dataset.title;
     const author = targetBtn.dataset.author;
     const image = targetBtn.dataset.image;
+    const genres = targetBtn.dataset.genres;
+    const description = targetBtn.dataset.description;
+    console.log(genres);
     const user = targetBtn.dataset.user;
     const item = targetBtn.dataset.itemId;
     const type = targetBtn.dataset.type;
@@ -35,9 +38,13 @@ async function activateModal(event) {
     modalImg.setAttribute("src", image);
     modalImg.setAttribute("alt", "WOMP WOMP");
     const modelTitle = document.getElementById("modal-title");
-    modalImg.innerText = title;
+    modelTitle.innerText = title;
     const modelCreator = document.getElementById("modal-creator");
     modelCreator.innerText = author;
+    const modelGenre = document.getElementById("modal-genre");
+    modelGenre.innerText = genres;
+    const modalDescription = document.getElementById("modal-description");
+    modalDescription.innerText = description;
     const commentDiv = document.getElementById("comments-for-item");
     const response = await fetch(`/get_${type}_comments`, {
         method: "GET",
@@ -76,7 +83,14 @@ async function submitComment(itemId, user_id, text, type) {
         },
         body: JSON.stringify({ itemId, user_id, text, type })
     });
-    const dbResponse = await validateJSON(response);
+    const modalCommentDiv = document.getElementById("comments-for-item");
+    const userLabel = document.createElement("h5");
+    const commentField = document.createElement("p");
+    modalCommentDiv.appendChild(userLabel);
+    modalCommentDiv.appendChild(commentField);
+    userLabel.innerText = `User ${user_id}`;
+    commentField.innerText = text;
+    addCommentInput.value = "";
 }
 function validateJSON(response) {
     if (response.ok) {

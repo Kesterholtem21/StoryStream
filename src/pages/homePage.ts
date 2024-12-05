@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const submitBtn = document.getElementById("sumbit-comment");
     //submitBtn.replaceWith(submitBtn.cloneNode(true));
-    submitBtn.addEventListener("click", () => {
+    submitBtn.addEventListener("click", async() => {
         console.log("SUBMITTED");
         submitComment(
             Comments.currentComment.itemID,
@@ -98,11 +98,6 @@ async function activateModal(event: MouseEvent){
     });
     const index = <Comments.CommentList> await validateJSON(response);
     
-    
-
-   
-    
-    
     for(const comment of index.commentList){
             if(String(comment.itemID) === item){
                 console.log("MAKES IT IN HERE")
@@ -144,9 +139,18 @@ async function submitComment(itemId: string, user_id: string, text: string, type
         body: JSON.stringify({itemId,user_id,text,type})
     });
 
+    const modalCommentDiv = document.getElementById("comments-for-item");
+    const userLabel = document.createElement("h5");
+    const commentField = document.createElement("p");
     
+    modalCommentDiv.appendChild(userLabel);
+    modalCommentDiv.appendChild(commentField);
 
-    const dbResponse = await validateJSON(response);
+    userLabel.innerText = `User ${user_id}`;
+    commentField.innerText = text;
+    addCommentInput.value = "";
+    
+    
 }
 
 function validateJSON(response: Response) {
