@@ -273,6 +273,7 @@ def get_admin():
 
 @app.post("/change_admin/")
 def change_admin():
+    
     if not current_user.is_authenticated:
         return jsonify({"error": "User not logged in"}), 401
 
@@ -297,6 +298,7 @@ def change_admin():
 
 
 @app.post("/admin/")
+@login_required
 def post_admin():
     form = SearchForm()
     user_results = []
@@ -310,6 +312,7 @@ def post_admin():
 
 
 @app.get("/viewed/")
+@login_required
 def get_viewed():
     # TODO create register GET route
 
@@ -360,6 +363,7 @@ def post_viewed():
 
 
 @app.get("/home/")
+@login_required
 def get_home():
     form = SearchForm()
     search_results = []
@@ -367,6 +371,7 @@ def get_home():
 
 
 @app.post("/home/")
+@login_required
 def post_home():
     form = SearchForm()
     book_results = []
@@ -425,6 +430,7 @@ def fetch_movie_by_id(movie_id):
 
 
 @app.post("/add_favorite")
+@login_required
 def add_favorite():
 
     data = request.get_json()
@@ -460,6 +466,7 @@ def add_favorite():
 
 
 @app.get("/favorites/")
+@login_required
 def get_favorites():
     fav_books = current_user.book_favorites
     fav_movies = current_user.movie_favorites
@@ -469,24 +476,28 @@ def get_favorites():
 
 
 @app.post("/favorites/")
+@login_required
 def post_favorites():
     # TODO create register POST route
     pass
 
 
 @app.get("/profile/")
+@login_required
 def get_profile():
     # TODO create register GET route
     return render_template("profilePage.html", user=current_user)
 
 
 @app.post("/profile/")
+@login_required
 def post_profile():
     # TODO create register POST route
     pass
 
 
 @app.get("/survey/")
+@login_required
 def get_survey():
     # TODO create register GET route
     form = PreferenceForm()
@@ -494,6 +505,7 @@ def get_survey():
 
 
 @app.post("/survey/")
+@login_required
 def post_survey():
     form = PreferenceForm()
 
@@ -515,6 +527,7 @@ def post_survey():
 
 
 @app.get("/register/")
+@login_required
 def get_register():
     # TODO create register GET route
     form = RegisterForm()
@@ -522,6 +535,7 @@ def get_register():
 
 
 @app.post("/register/")
+@login_required
 def post_register():
     form = RegisterForm()
     if form.validate():
