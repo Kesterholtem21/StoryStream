@@ -273,7 +273,7 @@ def get_admin():
 
 @app.post("/change_admin/")
 def change_admin():
-    
+
     if not current_user.is_authenticated:
         return jsonify({"error": "User not logged in"}), 401
 
@@ -462,6 +462,34 @@ def add_favorite():
         db.session.rollback()
         print(e)
         flash("An error occurred while adding to favorites.", "error")
+        return redirect(url_for('get_home'))
+
+
+@app.post("/remove_favorite")
+@login_required
+def remove_favorite():
+    data = request.get_json()
+    item_id = data.get("id")
+    item_type = data.get("type")
+
+    try:
+        if item_type == "book":
+            book = Book.query.get(item_id)
+            if book and book in current_user.book_favorites:
+                current_user.book_favorites.remove(book)
+
+        elif item_type == "movie":
+            movie = Movie.query.filter_by(id=item_id).first()
+            if movie and movie in current_user.movie_favorites:
+                current_user.movie_favorites.remove(movie)
+
+        db.session.commit()
+        return redirect(url_for('get_home'))
+
+    except (SQLAlchemyError, NoResultFound) as e:
+        db.session.rollback()
+        print(e)
+        flash("An error occurred while removing from favorites.", "error")
         return redirect(url_for('get_home'))
 
 
