@@ -39,4 +39,35 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
     });
+    const modal = document.getElementById("commentModal");
+    modal.addEventListener("show.bs.modal", activateModal);
+    async function activateModal(event) {
+        console.log("GETS HERE");
+        Comments.currentComment = {
+            itemID: "",
+            userID: "",
+            text: "",
+            timestamp: "",
+            type: "",
+        };
+        const modalCommentDiv = document.getElementById("comments-for-user");
+        const targetBtn = event.relatedTarget;
+        const user = targetBtn.dataset.user;
+        const type = targetBtn.dataset.type;
+        const response = await fetch(`/get_${type}_comments?userID=${user}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            }
+        });
+        const index = await validateJSON(response);
+        for (const comment of index.commentList) {
+            const userLabel = document.createElement("h5");
+            const commentField = document.createElement("p");
+            modalCommentDiv.appendChild(userLabel);
+            modalCommentDiv.appendChild(commentField);
+            userLabel.innerText = "User " + comment.userID;
+            commentField.innerText = comment.text;
+        }
+    }
 });

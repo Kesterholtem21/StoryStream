@@ -223,6 +223,36 @@ def get_Movie_comments():
         return jsonify({"success": True, "commentList": commentList}), 200
     except Exception as e:
         return jsonify({"success": False, "error": str(e)}), 500
+    
+@app.get("/get_User_comments/<int:userID>")
+def get_User_comments(userID):
+    try:
+        moviecomments = MovieComment.query.filter_by(userID=userID).all()
+        bookcomments = BookComment.query.filter_by(userID=userID).all()
+
+        commentList = [
+            {
+                "userID": comment.userID,
+                "itemID": comment.movieID,
+                "text": comment.text,
+                "timestamp": datetime.now(UTC).isoformat(),
+                "type": "Movie"
+            }
+            for comment in moviecomments
+        ] + [
+            {
+                "userID": comment.userID,
+                "itemID": comment.bookID,
+                "text": comment.text,
+                "type": "Book"
+            }
+            for comment in bookcomments
+        ]
+
+        return jsonify({"success": True, "commentList": commentList}), 200
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)}), 500
+
 
 
 @app.post("/post_comments")
