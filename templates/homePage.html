@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,14 +9,13 @@
     <script type="module" src="../static/favoritesHandler.js"></script>
     <link rel="stylesheet" href="/static/styles.css">
     <script src="../static/homePage.js"></script>
-    <script crossorigin="anonymous"
-        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
+    <script crossorigin="anonymous" src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"></script>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css"
-        rel="stylesheet" crossorigin="anonymous"
-        integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        crossorigin="anonymous" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9">
     <title>Home</title>
 </head>
+
 <body>
     <div class="Navigation">
         <div class="logo">
@@ -23,18 +23,30 @@
         </div>
         <div>
             <ul class="pageLinks">
-                <li class="active"><a href="/home/"><i class="fa-solid fa-house-chimney"></i><p>Home</p></a></li>
-                <li><a href="/favorites/"><i class="fa-solid fa-heart"></i><p>Favorites</p></a></li>
-                <li><a href="/viewed/"><i class="fa-solid fa-square-check"></i><p>Viewed</p></a></li>
-                <li><a href="/profile/"><i class="fa-solid fa-user"></i><p>Profile</p></a></li>
-                <li><a href="/survey/"><i class="fa-solid fa-user"></i><p>Survey</p></a></li>
+                <li class="active"><a href="/home/"><i class="fa-solid fa-house-chimney"></i>
+                        <p>Home</p>
+                    </a></li>
+                <li><a href="/favorites/"><i class="fa-solid fa-heart"></i>
+                        <p>Favorites</p>
+                    </a></li>
+                <li><a href="/viewed/"><i class="fa-solid fa-square-check"></i>
+                        <p>Viewed</p>
+                    </a></li>
+                <li><a href="/profile/"><i class="fa-solid fa-user"></i>
+                        <p>Profile</p>
+                    </a></li>
+                <li><a href="/survey/"><i class="fa-solid fa-user"></i>
+                        <p>Survey</p>
+                    </a></li>
                 {% if current_user.isAdmin %}
-                    <li><a href="/admin/"><i class="fa-solid fa-lock"></i><p>Admin</p></a></li>
+                <li><a href="/admin/"><i class="fa-solid fa-lock"></i>
+                        <p>Admin</p>
+                    </a></li>
                 {% endif %}
             </ul>
         </div>
     </div>
-    
+
     <div class="search-container">
         <form method="post" class="search-form">
             {{ form.hidden_tag() }}
@@ -42,89 +54,100 @@
             <button type="submit" class="search-button"><i class="fa-solid fa-search"></i></button>
         </form>
     </div>
-    
+
     {% if movie_results or book_results %}
-        <h2 class="results-heading">Search Results</h2>
+    <!-- <h2 class="results-heading">Search Results</h2> -->
 
-        <div class="tabs">
-            <button class="tab-button active" data-tab="movies">Movies</button>
-            <button class="tab-button" data-tab="books">Books</button>
+    <div class="tabs">
+        <button class="tab-button active" data-tab="movies">Movies</button>
+        <button class="tab-button" data-tab="books">Books</button>
+    </div>
+
+    <view-container id="movies" class="grid-view tab-content active">
+        {% if movie_results %}
+        {% for movie in movie_results %}
+        <div class="item">
+            <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#formModal"
+                data-title="{{movie.title}}" data-author="{{movie.release_date}}"
+                data-image="https://image.tmdb.org/t/p/w500{{ movie.poster_path }}" data-genres="{{movie.genres}}"
+                data-description="{{movie.overview}}" data-user="{{current_user.id}}" data-item-id="{{movie.id}}"
+                data-type="Movie">
+                <img class="movie-poster" src="https://image.tmdb.org/t/p/w500{{ movie.poster_path }}"
+                    alt="{{ movie.title }}">
+                <h3 class="item-title">{{ movie.title }}</h3>
+            </button>
+            {% if current_user.is_authenticated %}
+            <i class="fa-solid fa-heart favorite-icon" data-id="{{ movie.id }}" data-type="movie"></i>
+            {% endif %}
+
         </div>
+        {% endfor %}
+        {% else %}
+        <h1>Sorry, no movies for that search term.</h1>
+        {% endif %}
+    </view-container>
 
-        <view-container id="movies" class="grid-view tab-content active">
-            {% if movie_results %}
-            {% for movie in movie_results %}
-                <div class="item">
-                    <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#formModal" data-title="{{movie.title}}" data-author="{{movie.release_date}}" data-image="https://image.tmdb.org/t/p/w500{{ movie.poster_path }}" data-genres="{{movie.genres}}" data-description="{{movie.overview}}" data-user="{{current_user.id}}" data-item-id="{{movie.id}}" data-type="Movie">
-                    <img class="movie-poster" src="https://image.tmdb.org/t/p/w500{{ movie.poster_path }}" alt="{{ movie.title }}">
-                    <h3 class="item-title">{{ movie.title }}</h3>
-                    </button>
-                    {% if current_user.is_authenticated %}
-                    <i class="fa-solid fa-heart favorite-icon" data-id="{{ movie.id }}" data-type="movie"></i>
-                    {% endif %}
-                   
-                </div>
-            {% endfor %}
-            {% else %}
-            <h1>Sorry, no movies for that search term.</h1>
+    <view-container id="books" class="grid-view tab-content">
+        {% if book_results %}
+        {% for book in book_results %}
+        <div class="item">
+            <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#formModal"
+                data-title="{{book.title}}" data-author="{{book.author}}"
+                data-image="/static/photo_2023-11-23_14-49-45.jpg" data-user="{{current_user.id}}"
+                data-item-id="{{book.id}}" data-type="Book">
+                <h3 class="item-title">{{ book.title }}</h3>
+                <p class="item-description">Author: {{ book.author }}</p>
+            </button>
+            {% if current_user.is_authenticated %}
+            <i class="fa-solid fa-heart favorite-icon" data-id="{{ book.id }}" data-type="book"></i>
             {% endif %}
-        </view-container>
-        
-        <view-container id="books" class="grid-view tab-content">
-            {% if book_results %}
-            {% for book in book_results %}
-                <div class="item">
-                    <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#formModal" data-title="{{book.title}}" data-author="{{book.author}}" data-image="/static/photo_2023-11-23_14-49-45.jpg" data-user="{{current_user.id}}" data-item-id="{{book.id}}" data-type="Book">
-                    <h3 class="item-title">{{ book.title }}</h3>
-                    <p class="item-description">Author: {{ book.author }}</p>
-                    </button>
-                    {% if current_user.is_authenticated %}
-                    <i class="fa-solid fa-heart favorite-icon" data-id="{{ book.id }}" data-type="book"></i>
-                    {% endif %}
-                    
-                </div>
-            {% endfor %}
-            {% else %}
-            <h1>Sorry, no books for that search term</h1>
-            {% endif %}
-        </view-container>
+
+        </div>
+        {% endfor %}
+        {% else %}
+        <h1>Sorry, no books for that search term</h1>
+        {% endif %}
+    </view-container>
     {% endif %}
 
 
 
 
-<!-- Modal Form -->
-<div class="modal fade" id="formModal" tabindex="-1" aria-labelledby="formModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h1 class="modal-title fs-5" id="formModalLabel"></h1>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cancel" id="top-close"></button>
+    <!-- Modal Form -->
+    <div class="modal fade" id="formModal" tabindex="-1" aria-labelledby="formModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="formModalLabel"></h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cancel"
+                        id="top-close"></button>
+                </div>
+                <div class="modal-body text-align-center">
+                    <!-- JavaScript updates these values based on the item -->
+                    <img id="modal-image" src="" class="img-fluid" alt="">
+                    <h1 id="modal-title">Filler title</h1>
+                    <h2 id="modal-creator">Filler creator</h1>
+                        <p id="modal-genre">Filler genres</p>
+                        <p id="modal-description">filler description</p>
+                        <!-- JavaScript updates this to have all comments and add to them  -->
+                        <div id="comments-for-item"></div>
+                        <div id="add-comment-div">
+                            <input type="text" size="50" id="comment-input">
+                            <button id="sumbit-comment" type="button" value="Add Comment"
+                                data-user="{{current_user.id}}">Add Comment</button>
+                        </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+                        id="bottom-close">Close</button>
+                </div>
+            </div>
         </div>
-        <div class="modal-body text-align-center">
-          <!-- JavaScript updates these values based on the item -->
-          <img id="modal-image" src="" class="img-fluid" alt="">
-          <h1 id="modal-title">Filler title</h1>
-          <h2 id="modal-creator">Filler creator</h1>
-          <p id="modal-genre">Filler genres</p>
-          <p id="modal-description">filler description</p>
-          <!-- JavaScript updates this to have all comments and add to them  -->
-          <div id="comments-for-item"></div>
-          <div id="add-comment-div">
-                <input type="text" size="50" id="comment-input">
-                <button id="sumbit-comment" type="button" value="Add Comment" data-user="{{current_user.id}}">Add Comment</button>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="bottom-close">Close</button>
-        </div>
-      </div>
     </div>
-  </div>
 
 
 
 
 </body>
-</html>
 
+</html>
