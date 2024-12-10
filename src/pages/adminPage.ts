@@ -1,3 +1,22 @@
+namespace UserComments{
+    export let currentComment: Comment | null = null;
+
+    export interface Comment{
+        userID : string;
+        itemID: string;
+        text: string;
+        timestamp: string;
+        type: string;
+    }
+
+    export interface CommentList{
+        success: boolean;
+        commentList: Array<Comment>
+    }
+}
+
+
+
 document.addEventListener("DOMContentLoaded", () => {
     const adminButtons = document.querySelectorAll<HTMLButtonElement>(".admin-button");
     
@@ -68,7 +87,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     async function activateModal(event: MouseEvent){
         console.log("GETS HERE");
-        Comments.currentComment = {
+        UserComments.currentComment = {
             itemID: "",
             userID: "",
             text: "",
@@ -85,13 +104,13 @@ document.addEventListener("DOMContentLoaded", () => {
         
     
     
-        const response = await fetch(`/get_${type}_comments?userID=${user}`, {
+        const response = await fetch(`/get_${type}_comments/${user}`, {
             method:  "GET",
             headers: {
                 "Content-Type": "application/json",
             }
         });
-        const index = <Comments.CommentList> await validateJSON(response);
+        const index = <UserComments.CommentList> await validateJSON2(response);
         
         for (const comment of index.commentList) {
             const userLabel = document.createElement("h5");
@@ -106,3 +125,12 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
 });
+
+function validateJSON2(response: Response) {
+    if (response.ok) {
+        console.log("IT should BE good")
+        return response.json();
+    } else {
+        return Promise.reject(response);
+    }
+}

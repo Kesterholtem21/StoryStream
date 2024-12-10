@@ -1,3 +1,7 @@
+var UserComments;
+(function (UserComments) {
+    UserComments.currentComment = null;
+})(UserComments || (UserComments = {}));
 document.addEventListener("DOMContentLoaded", () => {
     const adminButtons = document.querySelectorAll(".admin-button");
     adminButtons.forEach(button => {
@@ -43,7 +47,7 @@ document.addEventListener("DOMContentLoaded", () => {
     modal.addEventListener("show.bs.modal", activateModal);
     async function activateModal(event) {
         console.log("GETS HERE");
-        Comments.currentComment = {
+        UserComments.currentComment = {
             itemID: "",
             userID: "",
             text: "",
@@ -54,13 +58,13 @@ document.addEventListener("DOMContentLoaded", () => {
         const targetBtn = event.relatedTarget;
         const user = targetBtn.dataset.user;
         const type = targetBtn.dataset.type;
-        const response = await fetch(`/get_${type}_comments?userID=${user}`, {
+        const response = await fetch(`/get_${type}_comments/${user}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
             }
         });
-        const index = await validateJSON(response);
+        const index = await validateJSON2(response);
         for (const comment of index.commentList) {
             const userLabel = document.createElement("h5");
             const commentField = document.createElement("p");
@@ -71,3 +75,12 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 });
+function validateJSON2(response) {
+    if (response.ok) {
+        console.log("IT should BE good");
+        return response.json();
+    }
+    else {
+        return Promise.reject(response);
+    }
+}
