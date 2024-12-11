@@ -44,37 +44,38 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
     const modal = document.getElementById("commentModal");
-    modal.addEventListener("show.bs.modal", activateModal);
-    async function activateModal(event) {
-        console.log("GETS HERE");
-        UserComments.currentComment = {
-            itemID: "",
-            userID: "",
-            text: "",
-            timestamp: "",
-            type: "",
-        };
-        const modalCommentDiv = document.getElementById("comments-for-user");
-        const targetBtn = event.relatedTarget;
-        const user = targetBtn.dataset.user;
-        const type = targetBtn.dataset.type;
-        const response = await fetch(`/get_${type}_comments/${user}`, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-            }
-        });
-        const index = await validateJSON2(response);
-        for (const comment of index.commentList) {
-            const userLabel = document.createElement("h5");
-            const commentField = document.createElement("p");
-            modalCommentDiv.appendChild(userLabel);
-            modalCommentDiv.appendChild(commentField);
-            userLabel.innerText = "User " + comment.userID;
-            commentField.innerText = comment.text;
-        }
-    }
+    modal.addEventListener("show.bs.modal", activateAdminModal);
 });
+async function activateAdminModal(event) {
+    console.log("GETS HERE");
+    UserComments.currentComment = {
+        itemID: "",
+        userID: "",
+        text: "",
+        timestamp: "",
+        type: "",
+    };
+    const modalCommentDiv = document.getElementById("comments-for-user");
+    modalCommentDiv.innerHTML = '';
+    const targetBtn = event.relatedTarget;
+    const user = targetBtn.dataset.user;
+    const type = targetBtn.dataset.type;
+    const response = await fetch(`/get_${type}_comments/${user}`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+        }
+    });
+    const index = await validateJSON2(response);
+    for (const comment of index.commentList) {
+        const userLabel = document.createElement("h5");
+        const commentField = document.createElement("p");
+        modalCommentDiv.appendChild(userLabel);
+        modalCommentDiv.appendChild(commentField);
+        userLabel.innerText = "User " + comment.userID;
+        commentField.innerText = comment.text;
+    }
+}
 function validateJSON2(response) {
     if (response.ok) {
         console.log("IT should BE good");
