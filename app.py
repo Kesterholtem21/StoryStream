@@ -142,6 +142,8 @@ class Book(db.Model):
     title = db.Column(db.String, nullable=False)
     author = db.Column(db.String, nullable=False)
     genre = db.Column(db.String, nullable=False)
+    poster_path = db.Column(db.String, nullable=True)
+    description = db.Column(db.String, nullable=True)
 
 
 class User(UserMixin, db.Model):
@@ -555,7 +557,6 @@ def post_survey():
 
 
 @app.get("/register/")
-@login_required
 def get_register():
     # TODO create register GET route
     form = RegisterForm()
@@ -563,7 +564,6 @@ def get_register():
 
 
 @app.post("/register/")
-@login_required
 def post_register():
     form = RegisterForm()
     if form.validate():

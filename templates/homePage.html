@@ -93,8 +93,9 @@
         <div class="item">
             <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#formModal"
                 data-title="{{book.title}}" data-author="{{book.author}}"
-                data-image="/static/photo_2023-11-23_14-49-45.jpg" data-user="{{current_user.id}}"
-                data-item-id="{{book.id}}" data-type="Book">
+                data-image="{{ book.poster_path }}" data-user="{{current_user.id}}"
+                data-genres="No genre available" data-description="{{ book.description }} pages" data-item-id="{{book.id}}" data-type="Book">
+                    <img class="book-poster" src="{{ book.poster_path}}" alt="{{ book.title }}">
                 <h3 class="item-title">{{ book.title }}</h3>
                 <p class="item-description">Author: {{ book.author }}</p>
             </button>
