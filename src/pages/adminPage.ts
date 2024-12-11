@@ -1,3 +1,22 @@
+namespace UserComments{
+    export let currentComment: Comment | null = null;
+
+    export interface Comment{
+        userID : string;
+        itemID: string;
+        text: string;
+        timestamp: string;
+        type: string;
+    }
+
+    export interface CommentList{
+        success: boolean;
+        commentList: Array<Comment>
+    }
+}
+
+
+
 document.addEventListener("DOMContentLoaded", () => {
     const adminButtons = document.querySelectorAll<HTMLButtonElement>(".admin-button");
     
@@ -61,4 +80,127 @@ document.addEventListener("DOMContentLoaded", () => {
             
         });
     });
+
+
+    const modal = document.getElementById("commentModal");
+    modal.addEventListener("show.bs.modal",activateAdminModal);
+
+    // async function activateModal(event: MouseEvent){
+    //     console.log("GETS HERE");
+    //     UserComments.currentComment = {
+    //         itemID: "",
+    //         userID: "",
+    //         text: "",
+    //         timestamp: "",
+    //         type: "",
+    //     };
+    
+    //     //moving on to comments
+    //     const modalCommentDiv = document.getElementById("comments-for-user");
+    //     const targetBtn = event.relatedTarget as HTMLElement;
+    //     const user = targetBtn.dataset.user;
+    //     const type = targetBtn.dataset.type;
+    
+        
+    
+    
+    //     const response = await fetch(`/get_${type}_comments/${user}`, {
+    //         method:  "GET",
+    //         headers: {
+    //             "Content-Type": "application/json",
+    //         }
+    //     });
+    //     const index = <UserComments.CommentList> await validateJSON2(response);
+        
+    //     for (const comment of index.commentList) {
+    //         const userLabel = document.createElement("h5");
+    //         const commentField = document.createElement("p");
+
+    //         modalCommentDiv.appendChild(userLabel);
+    //         modalCommentDiv.appendChild(commentField);
+
+    //         userLabel.innerText = "User " + comment.userID;
+    //         commentField.innerText = comment.text;
+    //     }
+    // }
+
 });
+
+async function activateAdminModal(event: MouseEvent){
+    console.log("GETS HERE");
+    UserComments.currentComment = {
+        itemID: "",
+        userID: "",
+        text: "",
+        timestamp: "",
+        type: "",
+    };
+
+    //moving on to comments
+    const modalCommentDiv = document.getElementById("comments-for-user");
+    modalCommentDiv.innerHTML = '';
+    const targetBtn = event.relatedTarget as HTMLElement;
+    const user = targetBtn.dataset.user;
+    const type = targetBtn.dataset.type;
+
+    
+
+
+    const response = await fetch(`/get_${type}_comments/${user}`, {
+        method:  "GET",
+        headers: {
+            "Content-Type": "application/json",
+        }
+    });
+    const index = <UserComments.CommentList> await validateJSON2(response);
+    
+    for (const comment of index.commentList) {
+        const commentDiv = document.createElement("div")
+        modalCommentDiv.appendChild(commentDiv);
+        const userLabel = document.createElement("h5");
+        const commentField = document.createElement("p");
+        const deleteBtn = document.createElement("button");
+        deleteBtn.addEventListener("click", async () =>{
+            removeComment(comment.itemID, comment.type)
+            commentDiv.remove;
+        })
+
+
+        const divider = document.createElement("hr");
+        deleteBtn.setAttribute("class", "delete-button");
+        userLabel.setAttribute("class", "user-paragraph");
+        
+
+        commentDiv.appendChild(divider);
+        commentDiv.appendChild(userLabel);
+        commentDiv.appendChild(commentField);
+        commentDiv.appendChild(deleteBtn);
+        deleteBtn.innerText = "DELETE COMMENT"
+        commentDiv.appendChild(divider);
+        
+        
+
+        userLabel.innerText = "User " + comment.userID;
+        commentField.innerText = comment.text;
+    }
+}
+
+async function removeComment(itemID: string, type:string){
+    console.log(`WOULD DELETE COMMENT: ${itemID} of type ${type}`);
+    const response = await fetch(`/deleteComment/`,{
+        method    :   "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({itemID,type})
+    });
+}
+
+function validateJSON2(response: Response) {
+    if (response.ok) {
+        console.log("IT should BE good")
+        return response.json();
+    } else {
+        return Promise.reject(response);
+    }
+}

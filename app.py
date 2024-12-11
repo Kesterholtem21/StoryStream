@@ -225,6 +225,36 @@ def get_Movie_comments():
         return jsonify({"success": True, "commentList": commentList}), 200
     except Exception as e:
         return jsonify({"success": False, "error": str(e)}), 500
+    
+@app.get("/get_User_comments/<int:userID>")
+def get_User_comments(userID):
+    try:
+        moviecomments = MovieComment.query.filter_by(userID=userID).all()
+        bookcomments = BookComment.query.filter_by(userID=userID).all()
+
+        commentList = [
+            {
+                "userID": comment.userID,
+                "itemID": comment.movieID,
+                "text": comment.text,
+                "timestamp": datetime.now(UTC).isoformat(),
+                "type": "Movie"
+            }
+            for comment in moviecomments
+        ] + [
+            {
+                "userID": comment.userID,
+                "itemID": comment.bookID,
+                "text": comment.text,
+                "type": "Book"
+            }
+            for comment in bookcomments
+        ]
+
+        return jsonify({"success": True, "commentList": commentList}), 200
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)}), 500
+
 
 
 @app.post("/post_comments")
@@ -312,6 +342,23 @@ def post_admin():
 
         return render_template("AdminPage.html", form=form, user_results=user_results, user=current_user)
 
+@app.post("/deleteComment/")
+def delete_Comment():
+    data = request.get_json()
+    type = data.get("type")
+    itemID = data.get("itemID")
+    if type == "Book":
+        commentToRemove = BookComment.query.filter(BookComment.commentID == int(itemID))
+        print(commentToRemove)
+        db.session.delete(commentToRemove)
+        db.session.commit()
+    if type == "Movie":
+        commentToRemove = MovieComment.query.filter(MovieComment.commentID == int(itemID))
+        print(commentToRemove)
+        db.session.delete(commentToRemove)
+        db.session.commit()
+    return jsonify({"success": True}), 200
+    
 
 @app.get("/viewed/")
 @login_required
