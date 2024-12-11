@@ -340,6 +340,23 @@ def post_admin():
 
         return render_template("AdminPage.html", form=form, user_results=user_results, user=current_user)
 
+@app.post("/deleteComment/")
+def delete_Comment():
+    data = request.get_json()
+    type = data.get("type")
+    itemID = data.get("itemID")
+    if type == "Book":
+        commentToRemove = BookComment.query.filter(BookComment.commentID == int(itemID))
+        print(commentToRemove)
+        db.session.delete(commentToRemove)
+        db.session.commit()
+    if type == "Movie":
+        commentToRemove = MovieComment.query.filter(MovieComment.commentID == int(itemID))
+        print(commentToRemove)
+        db.session.delete(commentToRemove)
+        db.session.commit()
+    return jsonify({"success": True}), 200
+    
 
 @app.get("/viewed/")
 @login_required
