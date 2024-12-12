@@ -238,7 +238,8 @@ def get_User_comments(userID):
                 "itemID": comment.movieID,
                 "text": comment.text,
                 "timestamp": datetime.now(UTC).isoformat(),
-                "type": "Movie"
+                "type": "Movie",
+                "commentID" :  comment.commentID
             }
             for comment in moviecomments
         ] + [
@@ -246,7 +247,8 @@ def get_User_comments(userID):
                 "userID": comment.userID,
                 "itemID": comment.bookID,
                 "text": comment.text,
-                "type": "Book"
+                "type": "Book",
+                "commentID" :   comment.commentID
             }
             for comment in bookcomments
         ]
@@ -346,14 +348,16 @@ def post_admin():
 def delete_Comment():
     data = request.get_json()
     type = data.get("type")
-    itemID = data.get("itemID")
+    commentID = data.get("commentID")
+    print(commentID)
+    print(type)
     if type == "Book":
-        commentToRemove = BookComment.query.filter(BookComment.commentID == int(itemID))
+        commentToRemove = BookComment.query.filter(BookComment.commentID == int(commentID)).first()
         print(commentToRemove)
         db.session.delete(commentToRemove)
         db.session.commit()
     if type == "Movie":
-        commentToRemove = MovieComment.query.filter(MovieComment.commentID == int(itemID))
+        commentToRemove = MovieComment.query.filter(MovieComment.commentID == int(commentID)).first()
         print(commentToRemove)
         db.session.delete(commentToRemove)
         db.session.commit()

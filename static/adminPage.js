@@ -54,6 +54,7 @@ async function activateAdminModal(event) {
         text: "",
         timestamp: "",
         type: "",
+        commentID: ""
     };
     const modalCommentDiv = document.getElementById("comments-for-user");
     modalCommentDiv.innerHTML = '';
@@ -74,8 +75,8 @@ async function activateAdminModal(event) {
         const commentField = document.createElement("p");
         const deleteBtn = document.createElement("button");
         deleteBtn.addEventListener("click", async () => {
-            removeComment(comment.itemID, comment.type);
-            commentDiv.remove;
+            removeComment(comment.commentID, comment.type);
+            commentDiv.remove();
         });
         const divider = document.createElement("hr");
         deleteBtn.setAttribute("class", "delete-button");
@@ -90,14 +91,14 @@ async function activateAdminModal(event) {
         commentField.innerText = comment.text;
     }
 }
-async function removeComment(itemID, type) {
-    console.log(`WOULD DELETE COMMENT: ${itemID} of type ${type}`);
+async function removeComment(commentID, type) {
+    console.log(`WOULD DELETE COMMENT: ${commentID} of type ${type}`);
     const response = await fetch(`/deleteComment/`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
         },
-        body: JSON.stringify({ itemID, type })
+        body: JSON.stringify({ commentID, type, })
     });
 }
 function validateJSON2(response) {

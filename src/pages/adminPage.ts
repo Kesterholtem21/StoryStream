@@ -7,6 +7,7 @@ namespace UserComments{
         text: string;
         timestamp: string;
         type: string;
+        commentID: string;
     }
 
     export interface CommentList{
@@ -134,6 +135,7 @@ async function activateAdminModal(event: MouseEvent){
         text: "",
         timestamp: "",
         type: "",
+        commentID: ""
     };
 
     //moving on to comments
@@ -155,14 +157,14 @@ async function activateAdminModal(event: MouseEvent){
     const index = <UserComments.CommentList> await validateJSON2(response);
     
     for (const comment of index.commentList) {
-        const commentDiv = document.createElement("div")
+        const commentDiv = document.createElement("div");
         modalCommentDiv.appendChild(commentDiv);
         const userLabel = document.createElement("h5");
         const commentField = document.createElement("p");
         const deleteBtn = document.createElement("button");
         deleteBtn.addEventListener("click", async () =>{
-            removeComment(comment.itemID, comment.type)
-            commentDiv.remove;
+            removeComment(comment.commentID, comment.type);
+            commentDiv.remove();
         })
 
 
@@ -185,14 +187,14 @@ async function activateAdminModal(event: MouseEvent){
     }
 }
 
-async function removeComment(itemID: string, type:string){
-    console.log(`WOULD DELETE COMMENT: ${itemID} of type ${type}`);
+async function removeComment(commentID: string, type:string){
+    console.log(`WOULD DELETE COMMENT: ${commentID} of type ${type}`);
     const response = await fetch(`/deleteComment/`,{
         method    :   "POST",
         headers: {
             "Content-Type": "application/json",
         },
-        body: JSON.stringify({itemID,type})
+        body: JSON.stringify({commentID,type,})
     });
 }
 
