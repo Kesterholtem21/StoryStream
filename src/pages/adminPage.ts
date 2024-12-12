@@ -80,51 +80,40 @@ document.addEventListener("DOMContentLoaded", () => {
             
             
         });
+
+        
     });
+
+    const removeUserBtns = document.querySelectorAll<HTMLButtonElement>(".command-button");
+        removeUserBtns.forEach(button =>{
+            button.addEventListener("click", async (event) =>{
+                const target = event.target as HTMLButtonElement;
+                const id = target.dataset.userId;
+                if(id){
+                    try{
+                        const response = await fetch("/remove_user/", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                            },
+                            body: JSON.stringify({id}),
+                        });
+                    }
+                    catch(error){
+                        console.error("Error:", error);
+                    }
+                }
+                const userContainer = target.parentElement.parentElement;
+                userContainer.remove();
+
+            });
+        });
 
 
     const modal = document.getElementById("commentModal");
     modal.addEventListener("show.bs.modal",activateAdminModal);
 
-    // async function activateModal(event: MouseEvent){
-    //     console.log("GETS HERE");
-    //     UserComments.currentComment = {
-    //         itemID: "",
-    //         userID: "",
-    //         text: "",
-    //         timestamp: "",
-    //         type: "",
-    //     };
     
-    //     //moving on to comments
-    //     const modalCommentDiv = document.getElementById("comments-for-user");
-    //     const targetBtn = event.relatedTarget as HTMLElement;
-    //     const user = targetBtn.dataset.user;
-    //     const type = targetBtn.dataset.type;
-    
-        
-    
-    
-    //     const response = await fetch(`/get_${type}_comments/${user}`, {
-    //         method:  "GET",
-    //         headers: {
-    //             "Content-Type": "application/json",
-    //         }
-    //     });
-    //     const index = <UserComments.CommentList> await validateJSON2(response);
-        
-    //     for (const comment of index.commentList) {
-    //         const userLabel = document.createElement("h5");
-    //         const commentField = document.createElement("p");
-
-    //         modalCommentDiv.appendChild(userLabel);
-    //         modalCommentDiv.appendChild(commentField);
-
-    //         userLabel.innerText = "User " + comment.userID;
-    //         commentField.innerText = comment.text;
-    //     }
-    // }
-
 });
 
 async function activateAdminModal(event: MouseEvent){

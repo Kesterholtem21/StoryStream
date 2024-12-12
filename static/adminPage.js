@@ -43,6 +43,29 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
     });
+    const removeUserBtns = document.querySelectorAll(".command-button");
+    removeUserBtns.forEach(button => {
+        button.addEventListener("click", async (event) => {
+            const target = event.target;
+            const id = target.dataset.userId;
+            if (id) {
+                try {
+                    const response = await fetch("/remove_user/", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({ id }),
+                    });
+                }
+                catch (error) {
+                    console.error("Error:", error);
+                }
+            }
+            const userContainer = target.parentElement.parentElement;
+            userContainer.remove();
+        });
+    });
     const modal = document.getElementById("commentModal");
     modal.addEventListener("show.bs.modal", activateAdminModal);
 });

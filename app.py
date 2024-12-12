@@ -364,6 +364,17 @@ def delete_Comment():
     return jsonify({"success": True}), 200
     
 
+@app.post("/remove_user/")
+def remove_user():
+    data = request.get_json()
+    userId = data.get("id")
+    userToRemove = User.query.filter(User.id == userId).first()
+    db.session.delete(userToRemove)
+    db.session.commit()
+    return jsonify({"success": True}), 200
+
+
+
 @app.get("/viewed/")
 @login_required
 def get_viewed():
