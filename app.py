@@ -153,6 +153,7 @@ class User(UserMixin, db.Model):
     age = db.Column(db.Integer, nullable=False)
     passwordHash = db.Column(db.Unicode, nullable=False)
     isAdmin = db.Column(db.Integer, nullable=False)
+    firstTimeLoggedIn = db.Column(db.Integer, nullable=False)
     genres = db.Column(db.Unicode, nullable=False)
     book_favorites = db.relationship(
         'Book', secondary=user_book_favorites, backref='users')
@@ -593,6 +594,9 @@ def post_profile():
 def get_survey():
     # TODO create register GET route
     form = PreferenceForm()
+    if current_user.firstTimeLoggedIn == 0:
+        current_user.firstTimeLoggedIn = 1
+        db.session.commit()
     return render_template("survey.html", form=form, user=current_user)
 
 
@@ -635,7 +639,7 @@ def post_register():
         if user is None:
             if form.password.data == form.confirmPassword.data:
                 user = User(username=form.username.data,
-                            password=form.password.data, age=form.age.data, isAdmin=0, genres="")  # type:ignore
+                            password=form.password.data, age=form.age.data, isAdmin=0,firstTimeLoggedIn=0 ,genres="")  # type:ignore
                 db.session.add(user)
                 db.session.commit()
                 return redirect(url_for('get_login'))
@@ -674,6 +678,8 @@ def post_login():
             next = request.args.get('next')
             if next is None or not next.startswith('/'):
                 next = url_for('get_home')
+                if current_user.firstTimeLoggedIn == 0:
+                    next = url_for('get_survey')
             return redirect(next)
         else:  # if the user does not exist or the password is incorrect
             # flash an error message and redirect to login form
