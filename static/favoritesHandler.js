@@ -5,9 +5,10 @@ document.addEventListener("DOMContentLoaded", () => {
             const target = event.target;
             const id = target.dataset.id;
             const type = target.dataset.type;
+            const isFavorite = target.classList.contains("favorited");
             if (id && type) {
                 try {
-                    const response = await fetch("/add_favorite", {
+                    const response = await fetch(isFavorite ? "/remove_favorite" : "/add_favorite", {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json",

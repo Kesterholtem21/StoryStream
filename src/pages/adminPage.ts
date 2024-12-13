@@ -1,3 +1,23 @@
+namespace UserComments{
+    export let currentComment: Comment | null = null;
+
+    export interface Comment{
+        userID : string;
+        itemID: string;
+        text: string;
+        timestamp: string;
+        type: string;
+        commentID: string;
+    }
+
+    export interface CommentList{
+        success: boolean;
+        commentList: Array<Comment>
+    }
+}
+
+
+
 document.addEventListener("DOMContentLoaded", () => {
     const adminButtons = document.querySelectorAll<HTMLButtonElement>(".admin-button");
     
@@ -60,5 +80,118 @@ document.addEventListener("DOMContentLoaded", () => {
             
             
         });
+
+        
     });
+
+    const removeUserBtns = document.querySelectorAll<HTMLButtonElement>(".command-button");
+        removeUserBtns.forEach(button =>{
+            button.addEventListener("click", async (event) =>{
+                const target = event.target as HTMLButtonElement;
+                const id = target.dataset.userId;
+                if(id){
+                    try{
+                        const response = await fetch("/remove_user/", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                            },
+                            body: JSON.stringify({id}),
+                        });
+                    }
+                    catch(error){
+                        console.error("Error:", error);
+                    }
+                }
+                const userContainer = target.parentElement.parentElement;
+                userContainer.remove();
+
+            });
+        });
+
+
+    const modal = document.getElementById("commentModal");
+    modal.addEventListener("show.bs.modal",activateAdminModal);
+
+    
 });
+
+async function activateAdminModal(event: MouseEvent){
+    console.log("GETS HERE");
+    UserComments.currentComment = {
+        itemID: "",
+        userID: "",
+        text: "",
+        timestamp: "",
+        type: "",
+        commentID: ""
+    };
+
+    //moving on to comments
+    const modalCommentDiv = document.getElementById("comments-for-user");
+    modalCommentDiv.innerHTML = '';
+    const targetBtn = event.relatedTarget as HTMLElement;
+    const user = targetBtn.dataset.user;
+    const type = targetBtn.dataset.type;
+
+    
+
+
+    const response = await fetch(`/get_${type}_comments/${user}`, {
+        method:  "GET",
+        headers: {
+            "Content-Type": "application/json",
+        }
+    });
+    const index = <UserComments.CommentList> await validateJSON2(response);
+    
+    for (const comment of index.commentList) {
+        const commentDiv = document.createElement("div");
+        modalCommentDiv.appendChild(commentDiv);
+        const userLabel = document.createElement("h5");
+        const commentField = document.createElement("p");
+        const deleteBtn = document.createElement("button");
+        deleteBtn.addEventListener("click", async () =>{
+            removeComment(comment.commentID, comment.type);
+            commentDiv.remove();
+        })
+
+
+        const divider = document.createElement("hr");
+        deleteBtn.setAttribute("class", "delete-button");
+        userLabel.setAttribute("class", "user-paragraph");
+        
+
+        commentDiv.appendChild(divider);
+        commentDiv.appendChild(userLabel);
+        commentDiv.appendChild(commentField);
+        commentDiv.appendChild(deleteBtn);
+        deleteBtn.innerText = "DELETE COMMENT"
+        commentDiv.appendChild(divider);
+        
+        
+
+        userLabel.innerText = "User " + comment.userID;
+        commentField.innerText = comment.text;
+    }
+}
+
+async function removeComment(commentID: string, type:string){
+    console.log(`WOULD DELETE COMMENT: ${commentID} of type ${type}`);
+    const response = await fetch(`/deleteComment/`,{
+        method    :   "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({commentID,type,})
+    });
+}
+
+function validateJSON2(response: Response) {
+    if (response.ok) {
+        console.log("IT should BE good")
+        return response.json();
+    } else {
+        return Promise.reject(response);
+    }
+}

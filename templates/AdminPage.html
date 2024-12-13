@@ -4,7 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://kit.fontawesome.com/d8283239b9.js" crossorigin="anonymous"></script>
+    <script type="module" src="../static/tabs.js"></script>
+    <script type="module" src="../static/favoritesHandler.js"></script>
     <link rel="stylesheet" href="/static/styles.css">
+    <script src="\static\adminPage.js" type="module"></script>
+    <script crossorigin="anonymous"
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css"
+        rel="stylesheet" crossorigin="anonymous"
+        integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9">
     <title>Admin</title>
 </head>
 <body>
@@ -16,7 +25,7 @@
             <ul class="pageLinks">
                 <li><a href="/home/"><i class="fa-solid fa-house-chimney"></i><p>Home</p></a></li>
                 <li><a href="/favorites/"><i class="fa-solid fa-heart"></i><p>Favorites</p></a></li>
-                <li><a href="/viewed/"><i class="fa-solid fa-square-check"></i><p>Viewed</p></a></li>
+                <li><a href="/viewed/"><i class="fa-solid fa-square-check"></i><p>Recommended</p></a></li>
                 <li><a href="/profile/"><i class="fa-solid fa-user"></i><p>Profile</p></a></li>
                 <li class="active"><a href="/admin/"><i class="fa-solid fa-lock"></i><p>Admin</p></a></li>
             </ul>
@@ -39,7 +48,7 @@
                         <p>Currently an Admin</p>
                         <br>
                         <button class="admin-button" data-id="{{thisUser.id}}" data-type="user" data-is-Admin="1">Remove Admin</button>
-                        <button class="command-button">View Comments</button>
+                        <button type="button" class="command-button btn" data-bs-toggle="modal" data-bs-target="#commentModal" data-user="{{thisUser.id}}" data-type="User">View Comments</button>
                         <button class="command-button">Remove User</button>
                         </div>
                     {% endif %}
@@ -47,9 +56,9 @@
                         <div>
                         <p>Currently a Regular User</p>
                         <br>
-                        <button class="admin-button" data-id="{{thisUser.id}}" data-type="user" data-is-Admin="0">Add as Admin</button>
-                        <button class="command-button">View Comments</button>
-                        <button class="command-button">Remove User</button>
+                        <button type="button" class="admin-button" data-id="{{thisUser.id}}" data-type="user" data-is-Admin="0">Add as Admin</button>
+                        <button type="button" class="command-button btn" data-bs-toggle="modal" data-bs-target="#commentModal" data-user="{{thisUser.id}}" data-type="User">View Comments</button>
+                        <button id="remove-user-btn" class="command-button" data-user-Id="{{thisUser.id}}">Remove User</button>
                         </div>
                     {% endif %}
                     
@@ -58,6 +67,26 @@
         </view-container>
     </div>
 
-    <script src="\static\adminPage.js" type="module"></script>
+
+
+<!-- Modal Form -->
+<div class="modal fade" id="commentModal" tabindex="-1" aria-labelledby="commentModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="formModalLabel"></h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cancel" id="top-close"></button>
+        </div>
+        <div class="modal-body text-align-center">
+          <!-- JavaScript updates this to have all comments and add to them  -->
+          <div id="comments-for-user"></div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="bottom-close">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </body>
 </html>

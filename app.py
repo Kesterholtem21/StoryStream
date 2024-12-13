@@ -153,6 +153,7 @@ class User(UserMixin, db.Model):
     age = db.Column(db.Integer, nullable=False)
     passwordHash = db.Column(db.Unicode, nullable=False)
     isAdmin = db.Column(db.Integer, nullable=False)
+    firstTimeLoggedIn = db.Column(db.Integer, nullable=False)
     genres = db.Column(db.Unicode, nullable=False)
     book_favorites = db.relationship(
         'Book', secondary=user_book_favorites, backref='users')
@@ -225,6 +226,38 @@ def get_Movie_comments():
         return jsonify({"success": True, "commentList": commentList}), 200
     except Exception as e:
         return jsonify({"success": False, "error": str(e)}), 500
+    
+@app.get("/get_User_comments/<int:userID>")
+def get_User_comments(userID):
+    try:
+        moviecomments = MovieComment.query.filter_by(userID=userID).all()
+        bookcomments = BookComment.query.filter_by(userID=userID).all()
+
+        commentList = [
+            {
+                "userID": comment.userID,
+                "itemID": comment.movieID,
+                "text": comment.text,
+                "timestamp": datetime.now(UTC).isoformat(),
+                "type": "Movie",
+                "commentID" :  comment.commentID
+            }
+            for comment in moviecomments
+        ] + [
+            {
+                "userID": comment.userID,
+                "itemID": comment.bookID,
+                "text": comment.text,
+                "type": "Book",
+                "commentID" :   comment.commentID
+            }
+            for comment in bookcomments
+        ]
+
+        return jsonify({"success": True, "commentList": commentList}), 200
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)}), 500
+
 
 
 @app.post("/post_comments")
@@ -311,6 +344,36 @@ def post_admin():
             User.username.ilike(f"%{search_term}%")).all()
 
         return render_template("AdminPage.html", form=form, user_results=user_results, user=current_user)
+
+@app.post("/deleteComment/")
+def delete_Comment():
+    data = request.get_json()
+    type = data.get("type")
+    commentID = data.get("commentID")
+    print(commentID)
+    print(type)
+    if type == "Book":
+        commentToRemove = BookComment.query.filter(BookComment.commentID == int(commentID)).first()
+        print(commentToRemove)
+        db.session.delete(commentToRemove)
+        db.session.commit()
+    if type == "Movie":
+        commentToRemove = MovieComment.query.filter(MovieComment.commentID == int(commentID)).first()
+        print(commentToRemove)
+        db.session.delete(commentToRemove)
+        db.session.commit()
+    return jsonify({"success": True}), 200
+    
+
+@app.post("/remove_user/")
+def remove_user():
+    data = request.get_json()
+    userId = data.get("id")
+    userToRemove = User.query.filter(User.id == userId).first()
+    db.session.delete(userToRemove)
+    db.session.commit()
+    return jsonify({"success": True}), 200
+
 
 
 @app.get("/viewed/")
@@ -531,6 +594,9 @@ def post_profile():
 def get_survey():
     # TODO create register GET route
     form = PreferenceForm()
+    if current_user.firstTimeLoggedIn == 0:
+        current_user.firstTimeLoggedIn = 1
+        db.session.commit()
     return render_template("survey.html", form=form, user=current_user)
 
 
@@ -573,7 +639,7 @@ def post_register():
         if user is None:
             if form.password.data == form.confirmPassword.data:
                 user = User(username=form.username.data,
-                            password=form.password.data, age=form.age.data, isAdmin=0, genres="")  # type:ignore
+                            password=form.password.data, age=form.age.data, isAdmin=0,firstTimeLoggedIn=0 ,genres="")  # type:ignore
                 db.session.add(user)
                 db.session.commit()
                 return redirect(url_for('get_login'))
@@ -612,6 +678,8 @@ def post_login():
             next = request.args.get('next')
             if next is None or not next.startswith('/'):
                 next = url_for('get_home')
+                if current_user.firstTimeLoggedIn == 0:
+                    next = url_for('get_survey')
             return redirect(next)
         else:  # if the user does not exist or the password is incorrect
             # flash an error message and redirect to login form
