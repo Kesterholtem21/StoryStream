@@ -370,7 +370,11 @@ def remove_user():
     data = request.get_json()
     userId = data.get("id")
     userToRemove = User.query.filter(User.id == userId).first()
+    usersComments = BookComment.query.filter(BookComment.userID == userId).all() + MovieComment.query.filter(MovieComment.userID == userId).all()
+    for comment in usersComments:
+        db.session.delete(comment)
     db.session.delete(userToRemove)
+
     db.session.commit()
     return jsonify({"success": True}), 200
 
