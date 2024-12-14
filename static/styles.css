@@ -52,6 +52,11 @@ input[type=submit]:hover {
     background-color: rgb(90, 44, 198);
 }
 
+#password-text{
+    font-size: large;
+    padding: 10px;
+}
+
 .form {
     width: 100%;
     display: flex;
