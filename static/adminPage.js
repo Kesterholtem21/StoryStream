@@ -43,7 +43,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
     });
-    const removeUserBtns = document.querySelectorAll(".command-button");
+    const removeUserBtns = document.querySelectorAll(".remove-user-btn");
     removeUserBtns.forEach(button => {
         button.addEventListener("click", async (event) => {
             const target = event.target;
