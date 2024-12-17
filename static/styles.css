@@ -451,6 +451,21 @@ input[type=submit]:hover {
     background-color: #e60000;
 }
 
+.pref-btn {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: cornflowerblue;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    margin-top: 20px;
+    transition: background-color 0.3s ease;
+}
+
+.pref-btn:hover {
+    background-color: cornflowerblue;
+}
+
 
 .container {
     position: absolute;

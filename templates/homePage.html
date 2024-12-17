@@ -66,7 +66,7 @@
     <view-container id="movies" class="grid-view tab-content active">
         {% if movie_results %}
         {% for movie in movie_results %}
-        <div class="movie-item">
+        <div class="item">
             <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#formModal"
                 data-title="{{movie.title}}" data-author="{{movie.release_date}}"
                 data-image="https://image.tmdb.org/t/p/w500{{ movie.poster_path }}" data-genres="{{movie.genres}}"
@@ -74,10 +74,14 @@
                 data-type="Movie">
                 <img class="movie-poster" src="https://image.tmdb.org/t/p/w500{{ movie.poster_path }}"
                     alt="{{ movie.title }}">
-                <h3 class="movie-item-title">{{ movie.title }}</h3>
+                <h3 class="item-title">{{ movie.title }}</h3>
             </button>
             {% if current_user.is_authenticated %}
+            {% if movie.id in movie_favorites %}
+            <i class="fa-solid fa-heart favorite-icon active favorited" data-id="{{ movie.id }}" data-type="movie"></i>
+            {% else %}
             <i class="fa-solid fa-heart favorite-icon" data-id="{{ movie.id }}" data-type="movie"></i>
+            {% endif %}
             {% endif %}
 
         </div>
@@ -100,7 +104,11 @@
                 <p class="item-description">Author: {{ book.author }}</p>
             </button>
             {% if current_user.is_authenticated %}
+            {% if book.id in book_favorites %}
+            <i class="fa-solid fa-heart favorite-icon active favorited" data-id="{{ book.id }}" data-type="book"></i>
+            {% else %}
             <i class="fa-solid fa-heart favorite-icon" data-id="{{ book.id }}" data-type="book"></i>
+            {% endif %}
             {% endif %}
 
         </div>

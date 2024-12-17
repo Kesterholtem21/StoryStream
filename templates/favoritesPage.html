@@ -59,7 +59,7 @@
     <view-container id="movies" class="grid-view tab-content active">
         {% if movies %}
         {% for movie in movies %}
-        <div class="movie-item">
+        <div class="item">
             <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#formModal"
                 data-title="{{movie.title}}" data-author="{{movie.release_date}}"
                 data-image="https://image.tmdb.org/t/p/w500{{ movie.poster_path }}" data-genres="{{movie.genres}}"
@@ -67,7 +67,7 @@
                 data-type="Movie">
                 <img class="movie-poster" src="https://image.tmdb.org/t/p/w500/{{ movie.poster_path }}"
                     alt="{{ movie.title }}">
-                <h3 class="movie-item-title">{{ movie.title }}</h3>
+                <h3 class="item-title">{{ movie.title }}</h3>
             </button>
             <i class="fa-solid fa-heart favorite-icon active favorited" data-id="{{ movie.id }}" data-type="movie"></i>
         </div>
@@ -82,9 +82,9 @@
         {% for book in books %}
         <div class="item">
             <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#formModal"
-                data-title="{{book.title}}" data-author="{{book.author}}"
-                data-image="/static/photo_2023-11-23_14-49-45.jpg" data-user="{{current_user.id}}"
-                data-item-id="{{book.id}}" data-type="Book">
+                data-title="{{book.title}}" data-author="{{book.author}}" data-image="{{ book.poster_path }}"
+                data-user="{{current_user.id}}" data-item-id="{{book.id}}" data-type="Book">
+                <img class="book-poster" src="{{ book.poster_path}}" alt="{{ book.title }}">
                 <h3 class="item-title">{{ book.title }}</h3>
                 <p class="item-description">Author: {{ book.author }}</p>
             </button>
@@ -100,7 +100,7 @@
     <h1 id="favorites-error">Please log in to view your favorites.</h1>
     {% endif %}
 
-    <div class="modal fade" id="formModal" tabindex="-1" aria-labelledby="formModalLabel" aria-hidden="true">
+    <div class="modal fade" id="formModal" tabindex="-1" aria-labelledby="formModalLabel" aria-hidden="false">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
