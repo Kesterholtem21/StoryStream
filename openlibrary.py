@@ -5,12 +5,10 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from time import sleep
 
-# Define the path to the SQLite database, consistent with the Flask app
 script_dir = os.path.abspath(os.path.dirname(__file__))
 dbfile = os.path.join(script_dir, "library.sqlite3")
 engine = create_engine(f"sqlite:///{dbfile}")
 
-# Set up the base and session
 Base = declarative_base()
 Session = sessionmaker(bind=engine)
 session = Session()
@@ -23,15 +21,14 @@ class Book(Base):
     author = Column(String, nullable=False)
     genre = Column(String, nullable=False)
     poster_path = Column(String, nullable=True)
-    description = Column(String, nullable=True)  # Stores the number of pages
+    description = Column(String, nullable=True)
 
 
-# Ensure the table exists in the database
+
 Base.metadata.create_all(engine)
 print('success 1')
 
 
-# Function to fetch books from the Open Library API
 def fetch_books(start=0, limit=10):
     url = f"https://openlibrary.org/search.json?q=fiction&limit={limit}&offset={start}"
     response = requests.get(url)
@@ -48,12 +45,11 @@ def construct_image_url(cover_id):
 def insert_books(books):
     for book_data in books:
         title = book_data.get('title')
-        authors = book_data.get('author_name', ['Unknown'])[0]  # Take the first author if available
-        genres = ', '.join(book_data.get('subject', [])) if book_data.get('subject') else 'Unknown'  # Join subjects as genre
+        authors = book_data.get('author_name', ['Unknown'])[0]
+        genres = ', '.join(book_data.get('subject', [])) if book_data.get('subject') else 'Unknown'
         cover_id = book_data.get('cover_i')
         poster_path = construct_image_url(cover_id)
 
-        # Handle number of pages
         num_pages = book_data.get('number_of_pages_median', 'Unknown')
 
         book = Book(title=title, author=authors, genre=genres, poster_path=poster_path, description=str(num_pages))
@@ -62,7 +58,6 @@ def insert_books(books):
     session.commit()
     print("Batch of books successfully added to the Books table.")
 
-# Fetch and store books in batches to avoid overloading the API
 start = 0
 batch_size = 100
 
@@ -77,6 +72,5 @@ while True:
     print(f"Inserted batch starting at {start}")
     sleep(1)
 
-# Close the session after all data is inserted
 session.close()
 print("Data successfully added to the Books table.")
