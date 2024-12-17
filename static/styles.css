@@ -52,6 +52,11 @@ input[type=submit]:hover {
     background-color: rgb(90, 44, 198);
 }
 
+#password-text {
+    font-size: large;
+    padding: 10px;
+}
+
 .form {
     width: 100%;
     display: flex;
@@ -446,6 +451,21 @@ input[type=submit]:hover {
     background-color: #e60000;
 }
 
+.pref-btn {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: cornflowerblue;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    margin-top: 20px;
+    transition: background-color 0.3s ease;
+}
+
+.pref-btn:hover {
+    background-color: cornflowerblue;
+}
+
 
 .container {
     position: absolute;
@@ -494,6 +514,24 @@ view-container .item {
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
+
+view-container .movie-item {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    width: 230px;
+    /* Set your desired width */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    font-size: 0.8em;
+    margin: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
 .movie-poster {
     width: 100%;
     height: auto;
@@ -517,6 +555,20 @@ view-container .item-title {
     /* Dark color for readability */
 }
 
+view-container .movie-item-title {
+    font-size: 1.5em;
+    /* font-weight: bold; */
+    margin: 10px 0;
+    color: #333;
+    /* Dark color for readability */
+    white-space: normal;
+    /* Allow text wrapping */
+    word-wrap: break-word;
+    /* Break long words */
+    overflow-wrap: break-word;
+    /* Ensures word breaking */
+}
+
 /* Short description of the movie or book */
 view-container .item-description {
     font-size: 1em;
@@ -530,10 +582,18 @@ view-container .item-description {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     /* Adjusted for better card fit */
-    gap: 16px;
-    margin-left: 15%;
-    margin-right: 15%;
+    gap: 10px;
+    margin-left: 10%;
+    margin-right: 10%;
     margin-top: 40px;
+}
+
+.grid-container {
+    display: flex;
+    justify-content: center;
+    /* Horizontal centering */
+    height: 100vh;
+    /* Full viewport height */
 }
 
 /* List view styling */
@@ -709,6 +769,7 @@ view-container .item-description {
     font-weight: lighter;
     font-size: medium;
 }
+
 .delete-button {
     background-color: #f1f1f1;
     border: none;
@@ -720,14 +781,25 @@ view-container .item-description {
     transition: background-color 0.3s;
 }
 
-.delete-button:hover{
+.delete-button:hover {
     background-color: cornflowerblue;
 }
 
-.user-paragraph{
+.user-paragraph {
     padding-top: 20px;
 }
 
+.remove-user-btn {
+    background-color: #f1f1f1;
+    border: none;
+    padding: 10px 20px;
+    margin: 0 5px;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
 
-
-
+.remove-user-btn:hover {
+    background-color: cornflowerblue;
+}

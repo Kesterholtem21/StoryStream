@@ -226,7 +226,8 @@ def get_Movie_comments():
         return jsonify({"success": True, "commentList": commentList}), 200
     except Exception as e:
         return jsonify({"success": False, "error": str(e)}), 500
-    
+
+
 @app.get("/get_User_comments/<int:userID>")
 def get_User_comments(userID):
     try:
@@ -240,7 +241,7 @@ def get_User_comments(userID):
                 "text": comment.text,
                 "timestamp": datetime.now(UTC).isoformat(),
                 "type": "Movie",
-                "commentID" :  comment.commentID
+                "commentID":  comment.commentID
             }
             for comment in moviecomments
         ] + [
@@ -249,7 +250,7 @@ def get_User_comments(userID):
                 "itemID": comment.bookID,
                 "text": comment.text,
                 "type": "Book",
-                "commentID" :   comment.commentID
+                "commentID":   comment.commentID
             }
             for comment in bookcomments
         ]
@@ -257,7 +258,6 @@ def get_User_comments(userID):
         return jsonify({"success": True, "commentList": commentList}), 200
     except Exception as e:
         return jsonify({"success": False, "error": str(e)}), 500
-
 
 
 @app.post("/post_comments")
@@ -345,6 +345,7 @@ def post_admin():
 
         return render_template("AdminPage.html", form=form, user_results=user_results, user=current_user)
 
+
 @app.post("/deleteComment/")
 def delete_Comment():
     data = request.get_json()
@@ -353,36 +354,46 @@ def delete_Comment():
     print(commentID)
     print(type)
     if type == "Book":
-        commentToRemove = BookComment.query.filter(BookComment.commentID == int(commentID)).first()
+        commentToRemove = BookComment.query.filter(
+            BookComment.commentID == int(commentID)).first()
         print(commentToRemove)
         db.session.delete(commentToRemove)
         db.session.commit()
     if type == "Movie":
-        commentToRemove = MovieComment.query.filter(MovieComment.commentID == int(commentID)).first()
+        commentToRemove = MovieComment.query.filter(
+            MovieComment.commentID == int(commentID)).first()
         print(commentToRemove)
         db.session.delete(commentToRemove)
         db.session.commit()
     return jsonify({"success": True}), 200
-    
+
 
 @app.post("/remove_user/")
 def remove_user():
     data = request.get_json()
     userId = data.get("id")
     userToRemove = User.query.filter(User.id == userId).first()
+    usersComments = BookComment.query.filter(BookComment.userID == userId).all(
+    ) + MovieComment.query.filter(MovieComment.userID == userId).all()
+    for comment in usersComments:
+        db.session.delete(comment)
     db.session.delete(userToRemove)
+
     db.session.commit()
     return jsonify({"success": True}), 200
-
 
 
 @app.get("/viewed/")
 @login_required
 def get_viewed():
     # TODO create register GET route
-
+    book_favorites = current_user.book_favorites
+    book_ids = [book.id for book in book_favorites]
+    movie_favorites = current_user.movie_favorites
+    movie_ids = [movie.id for movie in movie_favorites]
     genres = current_user.genres
-    print(genres)
+
+    print(movie_ids)
     if genres:
         book_results = Book.query.filter(
             Book.genre.ilike(f"%{genres[0]}%")).all()
@@ -394,7 +405,7 @@ def get_viewed():
         movie_api_results = fetch_tmdb_genre(genres)
         if movie_api_results:
             movie_results = movie_api_results
-        return render_template("viewedPage.html", user=current_user, movie_results=movie_results, book_results=book_results)
+        return render_template("viewedPage.html", user=current_user, movie_results=movie_results, book_results=book_results, book_favorites=book_ids, movie_favorites=movie_ids)
     else:
         movie_results = []
         book_results = []
@@ -442,6 +453,11 @@ def post_home():
     book_results = []
     movie_results = []
 
+    book_favorites = current_user.book_favorites
+    book_ids = [book.id for book in book_favorites]
+    movie_favorites = current_user.movie_favorites
+    movie_ids = [movie.id for movie in movie_favorites]
+
     if form.validate_on_submit():
         search_term = form.searchTerm.data.strip()
 
@@ -458,7 +474,7 @@ def post_home():
             movie_results = movie_api_results
 
     return render_template("homePage.html", form=form, movie_results=movie_results,
-                           book_results=book_results, current_user=current_user)
+                           book_results=book_results, current_user=current_user, book_favorites=book_ids, movie_favorites=movie_ids)
 
 
 def fetch_tmdb_movies(query):
@@ -639,7 +655,7 @@ def post_register():
         if user is None:
             if form.password.data == form.confirmPassword.data:
                 user = User(username=form.username.data,
-                            password=form.password.data, age=form.age.data, isAdmin=0,firstTimeLoggedIn=0 ,genres="")  # type:ignore
+                            password=form.password.data, age=form.age.data, isAdmin=0, firstTimeLoggedIn=0, genres="")  # type:ignore
                 db.session.add(user)
                 db.session.commit()
                 return redirect(url_for('get_login'))

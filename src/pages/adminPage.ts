@@ -84,7 +84,7 @@ document.addEventListener("DOMContentLoaded", () => {
         
     });
 
-    const removeUserBtns = document.querySelectorAll<HTMLButtonElement>(".command-button");
+    const removeUserBtns = document.querySelectorAll<HTMLButtonElement>(".remove-user-btn");
         removeUserBtns.forEach(button =>{
             button.addEventListener("click", async (event) =>{
                 const target = event.target as HTMLButtonElement;

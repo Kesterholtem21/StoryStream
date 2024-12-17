@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +8,7 @@
     <link rel="stylesheet" href="/static/styles.css">
     <title>Profile</title>
 </head>
+
 <body>
     <div class="Navigation">
         <div class="logo">
@@ -14,32 +16,44 @@
         </div>
         <div>
             <ul class="pageLinks">
-                <li><a href="/home/"><i class="fa-solid fa-house-chimney"></i><p>Home</p></a></li>
-                <li><a href="/favorites/"><i class="fa-solid fa-heart"></i><p>Favorites</p></a></li>
-                <li><a href="/viewed/"><i class="fa-solid fa-square-check"></i><p>Recommended</p></a></li>
-                <li class="active"><a href="/profile/"><i class="fa-solid fa-user"></i><p>Profile</p></a></li>
+                <li><a href="/home/"><i class="fa-solid fa-house-chimney"></i>
+                        <p>Home</p>
+                    </a></li>
+                <li><a href="/favorites/"><i class="fa-solid fa-heart"></i>
+                        <p>Favorites</p>
+                    </a></li>
+                <li><a href="/viewed/"><i class="fa-solid fa-square-check"></i>
+                        <p>Recommended</p>
+                    </a></li>
+                <li class="active"><a href="/profile/"><i class="fa-solid fa-user"></i>
+                        <p>Profile</p>
+                    </a></li>
                 <!-- <li><a href="/survey/"><i class="fa-solid fa-user"></i><p>Survey</p></a></li> -->
                 {% if user.isAdmin %}
-                    <li><a href="/admin/"><i class="fa-solid fa-lock"></i><p>Admin</p></a></li>
+                <li><a href="/admin/"><i class="fa-solid fa-lock"></i>
+                        <p>Admin</p>
+                    </a></li>
                 {% endif %}
             </ul>
         </div>
     </div>
-    <div class="overall-container"> 
+    <div class="overall-container">
         <div class="profile-container">
             <div class="profile-header">
-                <img src="{{ url_for('static', filename='photo_2023-11-23_14-49-45.jpg') }}" alt="Profile Picture" class="profile-pic">
+                <img src="{{ url_for('static', filename='photo_2023-11-23_14-49-45.jpg') }}" alt="Profile Picture"
+                    class="profile-pic">
                 <h1 class="profile-name">{{user.username}}</h1>
                 {% if user.isAdmin %}
-                    <p class="profile-bio">Admin User</p>
+                <p class="profile-bio">Admin User</p>
                 {% endif %}
                 {% if not user.isAdmin %}
-                    <p class="profile-bio">Regular User</p>
+                <p class="profile-bio">Regular User</p>
                 {% endif %}
-            </div>    
-            <a href="/survey" class="logout-btn">Change Preferences</a>
+            </div>
+            <a href="/survey" class="pref-btn">Change Preferences</a>
             <a href="/logout" class="logout-btn">Logout</a>
         </div>
     </div>
 </body>
+
 </html>
